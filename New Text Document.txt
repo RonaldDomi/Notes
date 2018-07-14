@@ -1,0 +1,35 @@
+Content management system
+
+A content management system (CMS) manages the creation and modification of digital content. 
+Digital content is any content that exists in the form of digital data. 
+It typically supports multiple users in a collaborative environment.
+
+Headless CMS
+A content repository or content store is a database of digital content with an associated set of data management, 
+search and access methods allowing application-independent access to the content, rather like a digital library, 
+but with the ability to store and modify content in addition to searching and retrieving. 
+
+A Headless CMS is a back-end only content management system (CMS) built from the ground up as a content repository that makes content accessible via a RESTful API for display on any device.
+ 
+ REST-compliant web services allow the requesting systems to access and manipulate textual representations of web resources by using a uniform and predefined set of stateless operations.
+ 
+The term “headless” comes from the concept of chopping the “head” (the front end, i.e. the website) off the “body” (the back end, the content repository).
+
+
+What are microservices?
+Microservices - also known as the microservice architecture - is an architectural style that structures an application as a collection of loosely coupled services, which implement business capabilities. The microservice architecture enables the continuous delivery/deployment of large, complex applications. It also enables an organization to evolve its technology stack.
+
+Microservices are not a silver bullet
+The microservice architecture is not a silver bullet. It has several drawbacks. Moreover, when using this architecture there are numerous issues that you must address. The microservice architecture pattern language is a collection of patterns for applying the microservice architecture. It has two goals:
+
+The pattern language enables you to decide whether microservices are a good fit for your application.
+The pattern language enables you to use the microservice architecture successfully.
+Where to start?
+A good starting point is the Monolithic Architecture pattern, which is the traditional architectural style that is still a good choice for many applications. It does, however, have numerous limitations and issues and so a better choice for large/complex applications is the Microservice architecture pattern.
+
+API
+In computer programming, an application programming interface (API) is a set of subroutine definitions, protocols, and tools for building software. In general terms, it is a set of clearly defined methods of communication between various components. A good API makes it easier to develop a computer program by providing all the building blocks, which are then put together by the programmer.
+
+A web template system in web publishing lets web designers and developers work with web templates to automatically generate custom web pages, such as the results from a search. This reuses static web page elements while defining dynamic elements based on web request parameters. Web templates support static content, providing basic structure and appearance. Developers can implement tempates from content management systems, web application frameworks, and HTML editors
+
+Node.js is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code server-side. Historically, JavaScript was used primarily for client-side scripting, in which scripts written in JavaScript are embedded in a webpage's HTML and run client-side by a JavaScript engine in the user's web browser. Node.js lets developers use JavaScript for server-side scripting—running scripts server-side to produce dynamic web page content before the page is sent to the user's web browser. Consequently, Node.js represents a "JavaScript everywhere" paradigm,[5] unifying web application development around a single programming language, rather than different languages for server side and client side scripts.

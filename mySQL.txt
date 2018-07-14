@@ -1,0 +1,78 @@
+PHPMYADMIN
+
+CREATE DATABASE test;
+DROP DATABASE test;
+
+CREATE TABLE customers(
+	id INT NOT NULL AUTO_INCREMENT,
+	firstName VARCHAR(255),
+	lastName VARCHAR(255),
+	PRIMARY KEY(id)
+);
+
+INSERT INTO customers(firstName, lastName) 
+VALUES ('Roni', 'Domi'), 
+	('Nr2', 'Domi);
+
+UPDATE customers
+SET firstName = 'Ronald'
+WHERE id = 1;
+
+DELETE from customers
+WHERE id = 2;
+
+ALTER TABLE customers ADD testCol VARCHAR(255);
+
+ALTER TABLE customres MODIFY COLUMN testcol INT(11); 
+changes to int from varchar
+
+ALTER TABLE customers DROP COLUMN testCol;
+
+SELECT * FROM customers;
+
+SELECT firstName, lastName FROM customers;
+
+SELECT * from customers WHERE id = 2;
+you can do WHERE firstName = 'Bob' but id is a primary key
+and if you have 2 bobs it will select both
+
+select * from customers where name != 'Annie';
+
+select name, id, pet from customers WHERE ...;
+
+SELECT * from customers ORDER BY lastName;
+SELECT * from customers ORDER BY lastName DESC; descending
+
+SELECT state from customers;
+if don't want duplicates than
+SELECT DISTINCT state from customers;
+
+INT
+SELECT * FROM customers WHERE age < 30;
+
+BETWEEN 100 AND 500
+LIKE
+IN(100, 200, 300)
+IS, IS NOT  NULL compares
+IS NOT DISTINCT FROM
+AS
+
+
+SELECT * FROM customers 
+WHERE age
+BETWEEN 22 AND 30;
+
+SELECT * FROM customers 
+WHERE city LIKE '%n';  %n%,  NOT LIKE if you dont want 
+all cities that end with    n   % is called wiled card
+
+SELECT * FROM customers
+WHERE state in ('New York', 'New Hampshire');
+
+CREATE INDEX CIndex
+ON customers(city);   creates a index
+
+DROP INDEX CIndex on customers;
+
+
+

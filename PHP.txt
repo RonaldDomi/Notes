@@ -1,0 +1,107 @@
+L I N K I N G   T O   D A T A B A S E  
+ 	 
+
+
+
+
+$server = 'localhost';
+$user  = 'root';
+$pass = 'PhpRoniMyAdmin';
+$db = '  ';
+$conn = new mysqli($servername, $username, $password, $dbname);
+if($conn -> connect_error){
+	die("Connection failed: " . $conn->connect_error);
+}
+$conn -> close();
+
+
+
+
+
+
+LINKING TO DATABASE	LINKING TO DATABASE
+/////////////////////////////////////////////////////////////
+ QUERY			 QUERY			 QUERY				
+
+
+
+
+$sql = ' SELECT * FROM table';
+$result = $conn -> query($sql);
+
+
+
+
+
+
+
+ QUERY			 QUERY				QUERY	
+////////////////////////////////////////////////////////////
+FOR LOOP WITH ROWS  		FOR LOOP WITH ROWS
+
+
+
+
+
+
+
+
+if($result -> num_rows > 0){
+ 	while($row = $result -> fetch_assoc()){
+		echo 'something ' . $row['id'] . ' end';
+
+
+
+
+
+
+
+
+FOR LOOP WITH ROWS 	FOR LOOP WITH ROWS
+////////////////////////////////////////////////////////////
+NUMBER OF ROWS 		NUMBER OF ROWS
+
+
+
+
+
+
+
+
+$rows = $result -> num_rows;
+
+
+if($result -> num_rows > 0){
+ while($row =  $result -> fetch_assoc())
+
+
+$row = mysqli_num_rows($result);
+
+
+
+
+
+
+NUMBER OF ROWS                  NUMBER OF ROWS
+////////////////////////////////////////////////////////////
+TESTS                   TESTS                 TESTS
+
+
+
+<input type="hidden" name="id" value="<?php echo $id;?>">
+
+
+
+
+
+
+
+if(	isset($_POST['id']) 	){  #name = id   value = 23
+       $id = $_POST['id'];  				#23
+
+if ($conn->query($sql) === TRUE) {
+   #query(insert into . values .);
+    echo "New record created successfully";
+
+
+

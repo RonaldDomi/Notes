@@ -1,0 +1,493 @@
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+pip install flask
+
+from flask import Flask, render_template, url_for, redirect, flash
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'random giberish'
+
+flash('Text', 'danger/success')       /after flash you either redirect or render_template 
+return render_template('file.html')   /templates/file.html 
+return redirect(url_for('home'))      /home is the name of the function, def home(): template home.html 
+ 
+
+@app.route('/home')
+def home():
+	return render_template('home.html')        you can add variables as arguments
+ 
+
+if __name__ == '__main__':
+    app.run(debug=True)
+	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+FORMS	FORMS	FORMS 	FORMS  	FORMS	FORMS  	FORMS  	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	
+																 																		form.py
+pip install flask-wtf
+																																		
+from flask_wtf import FlaskForm 
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, EqualTo
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2,max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
+																																		main.py
+																																		
+from form import RegistrationForm, LoginForm
+
+@app.route('/login', methods=['Post', 'Get'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'a@a.com' and form.password.data == 'p':                                            //fake login
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else: 
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
+
+@app.route('/register', methods=['Post', 'Get'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+																																		register.html
+{% extends 'layout.html' %}
+{% block content %}
+	<div class='content-section'>
+        <form method='post' action=''>
+		
+            {{form.hidden_tag()}}                                                              this is linked with the secret key
+			
+            <fieldset class='form-group'>
+                <legend class='border-bottom mb-4'>Join Today</legend>
+                <div class='form-group'>
+                    {{form.username.label(class='form-control-label')}}
+
+                    {% if form.username.errors %}                                         		all 'usernames' can be changed to the class inputs
+                        {{form.username(class='form-control form-control-lg is-invalid')}}		for example, password, confirm_password or email
+                        <div class='invalid-feedback'>
+                            {% for error in form.username.errors %}
+                                <span> {{error}} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{form.username(class='form-control form-control-lg')}}
+                    {% endif %}
+				
+                </div>
+			</fieldset>
+			<div class='form-group'>
+                {{form.submit(class='btn btn-outline-info')}}
+            </div>
+        </form>
+    </div>
+	<div class='border-top pt-3'>
+        <small class='text-muted'>
+            Already Have An Account? <a  class='ml-2' href='url_for("login")'>Sign In</a> 
+        </small>
+    </div>
+{% endblock content %}
+	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+																																		login.html
+	
+{% extends 'layout.html' %}
+{% block content %}
+    <div class='content-section'>
+        <form method='post' action=''>
+            {{form.hidden_tag()}}
+            <fieldset class='form-group'>
+                <legend class='border-bottom mb-4'>Login</legend>
+                <div class='form-group'>
+                    {{form.email.label(class='form-control-label')}}
+
+                    {% if form.email.errors %}
+                        {{form.email(class='form-control form-control-lg is-invalid')}}
+                        <div class='invalid-feedback'>
+                            {% for error in form.email.errors %}
+                                <span> {{error}} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}    
+                        {{form.email(class='form-control form-control-lg')}}
+                    {% endif %}
+                </div>
+				
+                <small class='text-muted ml-2'>
+                    <a href='#'>
+                        Forgot Password?
+                    </a>
+                </small>
+				
+            </fieldset>
+			<div class='form-group'>
+                {{form.submit(class='btn btn-outline-info')}}
+            </div>
+        </form>
+    </div>
+    <div class='border-top pt-3'>
+        <small class='text-muted'>
+            Need An Account? <a  class='ml-2' href='url_for("register")'>Sign Up Now</a>
+        </small>
+    </div>
+{% endblock content %}
+
+																																		layout.html, before the block content
+{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+	  {% for category, message in messages %}
+		<div class="alert alert-{{ category }}">
+		  {{ message }}
+		</div>
+	  {% endfor %}
+	{% endif %}
+{% endwith %}
+	
+
+FORMS	FORMS	FORMS 	FORMS  	FORMS	FORMS  	FORMS  	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		
+	
+from flask_sqlalchemy import SQLAlchemy
+pip install flask-sqlalchemy
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+db = SQLAlchemy(app)
+	
+	
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
+	#this is not a column, Post is the actual class, backref is what we will call it
+
+    def __repr__(self):
+        return f"User('{self.username}'), ('{self.email}'), ('{self.image_file}')"
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)				#from datetime import datetime
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)					#a foreign key needs the name of the table, lowercase
+    
+    def __repr__(self):
+        return f"User('{self.title}'), ('{self.date_posted}')"
+
+		
+>>CONSOLE
+from flaskblog import db 
+db.create_all()          
+
+from flaskblog import User, Post        	#the classes 
+user_1 = User(username='John', email='JohnDoe@example.com', password='password')
+user_2 = User(username='John2', email='JohnDoe2@example.com', password='password2')
+db.session.add(user_1) 						#cannot add all as in git, now in staged area 
+db.session.commit() 						#commited area,
+User.query.all()							#return a list with all the 'users'
+User.query.get(1) 							#1 is the id, the primary key
+User.query.first()							#return only the first instance created
+User.query.filter_by(username='John').all()	#return the list with all the filtered users 
+user = User.query.filter_by(username='John').first()
+print user                            		#prints the instance 
+
+print user.posts  >> []						#user has no posts linked with it
+print user.id 	  >> 1
+post_1 = Post(title='Blog 1', content='First Post Content!', user_id=user.id)
+post_2 = Post(title='Blog 2', content='Second Post Content!', user_id=user.id)
+db.session.add(post_1)
+db.session.add(post_2)
+db.session.commit()
+user.posts 		  >> #list with the posts that has: a title, dateposted like we specified in the __repr__ method 
+post = Post.query.first()					#it has the first post created 
+post.user_id  	  >>1 						#user_id has been linked as a foreign key 
+post.author       >>User('John', 'JohnDoe@example', 'default.jpg')    author as a backref is the user, 
+	
+	
+db.drop_all()								#deletes all THIS SHIT 
+db.create_all()
+User.query.all()  >> []
+Post.query.all()  >> []
+
+
+DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTUR		STRUCTUR		STRUCTUR		
+	
+	
+To this point the structure of the files looked like this:
+THIS IS A MODULE
+
+ |-->static  		-->		main.css
+ |	
+ |-->templates -----|-->	home.html 							includes layout.html
+ |					|
+ |					|--> 	layout.html                        	includes main.css, bootstrap
+ |					|
+ |					|-->  	login.html 							includes layout.html 
+ |					|
+ |					|--> 	register.html 						includes layout.html 
+ |					|
+ |					 --> 	about.html 							includes layout.html
+ |					
+ |-->flaskblog.py 												includes  flask, render_template, url_for, flash, redirect, form.py, models.py, sqlalchemy.   creates app, initialises app, routes
+ |
+ |-->models.py													includes flaskblog #this is a circular import
+ |
+  -->form.py													includes wtforms										creates RegistrationForm, LoginForm
+	
+
+THIS IS A PACKAGE 
+a package only has a file named __init__.py
+
+|-->flaskblog ------|--> __init__.py							includes flask, sqlalchemy, flaskblog.routes.py(import routs after db   				   				creates app, db
+|					|
+|					|--> forms.py								includes wtforms
+|					|
+|					|--> models.py								includes flaskblog.db
+|					|
+|					|--> routes.py								includes render_template, url_for, flash, redirect, flaskblog.models.py, flaskblog.forms.py, app     	creates routes
+|					|
+|					|--> site.db
+|					|
+|					|
+|					|--> static ----> main.css
+|					|
+|					 --> templates ---------------->	home.html 							includes layout.html
+|											 	|
+|												|--> 	layout.html                        	includes main.css, bootstrap
+|												|
+|												|-->  	login.html 							includes layout.html 
+|												|
+|												|--> 	register.html 						includes layout.html 
+|												|
+|												 --> 	about.html 							includes layout.html
+|				
+|
+ -->run.py														from flaskblog import app(inside __init.py)                   									initialises app
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE			
+	
+	
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			
+pip install flash-bcrypt
+	
+	
+from flask_bcrypt import Bcrypt 
+bcrypt = Bcrypt()
+bcrypt.generate_password_hash('testing')
+>> b'2938j*rj2098j389j)*j30*J)(J(#)3094043'												#the b in the begining means it is in bytes
+hashed_pw = bcrypt.generate_password_hash('testing').decode('utf-8')
+>> '2938j*rj2098j389j)*j30*J)(J(#)3094043'												# now its just a string
+bcrypt.check_password_hash(hashed_pw, 'password')
+>> False 
+bcrypt.check_password_hash(hashed_pw, 'testing')
+>> True 
+
+
+HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+	
+__init__.py
+from flask_bcrypt import Bcrypt 
+bcrypt = Bcrypt(app)
+	
+routes.py 
+from flaskblog import app, db, bcrypt
+def register()
+	if form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+		user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+		db.session.add(user)
+		db.session.commit()
+		flash('Account created', 'success')
+		return redirect(url_for('login'))
+	return render_template('register.html', title='Register', form=form)
+		
+forms.py 
+from flaskblog.models import User
+from wtforms.validators import ValidationError
+
+class RegistrationForm():
+	....
+	....
+	
+	#def validate_field(self, field):
+	#	if True:
+	#		raise ValidationError('Validation Message')
+	# VALIDATION ERROR TEMPLATE
+	
+	def validate_username(self, username):
+		user = User.query.filter_by(username=username.data).first()	
+		if user:
+			raise ValidationError('That username is taken. Please choose a different one')
+	#almost same for email
+	
+
+pip install flask-login	
+__init__.py 
+from flask_login import LoginManager
+login_manager = LoginManager(app)
+
+models.py 
+from flaskblog import db, login_manager 
+from flask_login import UserMixin
+
+class user(db.Model, UserMixin):
+	.......
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+	
+routes.py 
+from flask_login import login_user, current_user, logout_user
+
+def login():
+	if form.validate_on_submit():          #overwrite
+		if current_user.is_authenticated:
+			return redirect(url_for('home'))
+		user = User.query.filter_by(email=form.email.data).first()
+		if user and bcrypt.check_password_hash(user.password, form.password.data):
+			login_user(user, remember=form.remember.data)
+			return redirect(url_for('home'))
+		else:
+			flash('Login Unsuccessful..., 'danger')
+	return render_template('login....', title='Login', form=form)
+	
+def register():
+	if current_user.is_authenticated:
+		return redirect(url_for('home'))
+	
+	
+@app.route('/logout')
+def logout():
+	logout_user()
+	return redirect(url_for('home'))
+	
+layout.html
+......
+<div class='navbar-nav'>
+	{% if current_user.is_authenticated %}
+		<a href='{{url_for("logout") }}'> Log out </a>
+	{% else %}
+		<a href='{{url_for("login") }}'> Log In </a>
+		<a href='{{url_for("register") }}'> Sign Up </a>
+	{% endif %}
+</div>
+
+routes.py
+....
+@app.route('/account')
+def account():
+	return render_template('account.html', title='Account')
+	
+account.html
+{% extends 'layout.hmlt' %}
+{% block content %}
+	<h1> {{ current_user.username }}</h1>
+{% endblock content 
+
+layout.html
+......
+<div class='navbar-nav'>
+	{% if current_user.is_authenticated %}
+		<a href='{{url_for("logout") }}'> Log out </a>
+		<a href='{{url_for("account") }}'> Account </a>
+......
+
+routes.py
+from flask_login import login_required 
+.....
+
+@app.route('/account')
+@login_required 
+def account():
+	....
+
+__init__.py
+....
+login_manager.login_view = 'login' #function name
+login_manager.login_message_category = 'info'
+
+routes.py
+from flask import ..., request 
+....
+
+def login():
+	....
+	if form.validate():
+		...
+		if user and bcrypt ....:
+			login_user
+			next_page = request.args.get('next')
+			return redirect(next_page) if next_page else redirect(url_for('home'))
+		
+DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE							
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	

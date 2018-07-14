@@ -1,0 +1,239 @@
+C THEORY / REVIEW
+
+#include <stdio.h>   printf()
+#include <conio.h>  getche()
+#include <string.h> strlen()
+scanf("%d", int)
+gets(emri)
+strcpy(str1, str2)
+puts(emri)
+strcmp(str1, str2)     0 if ==   -negativ str1<str2   pozitiv str1>str2
+
+karakteret vendosen brenad '  ' 
+stringjet vendosen brenda    "  "
+
+int age, sons, wifes 
+percaktimi - deklarimi i variablave
+
+int number = 1;
+num = age = 1
+
+float num = 5.02;
+printf("float me 2shifra pas presjes %.2f", num)
+>>float me 2shifra pas presjes 5.02
+ne te kundert
+>>float me 2shifra pas presjes 5.020000
+
+char c;
+c = getche()
+
+scanf("%d %c %f", &int, &char, &float);   =>  2 I 0.9
+
+char -   1byte               %c, %s
+int   -   2byte               %d
+long  -   4byte   
+float -   4byte               %f
+double- 8byte
+double long - 10byte
+
+/n,   /t,    /r(enter),   /b(backspace)
+
+%0.2f  >>   2shifra pas presjes
+%2f    >>    2vende zen numri
+
+int num;
+for (num = o; num < 10; num++){}
+
+while (ch != '\r\){}
+
+do{  } while (num> 10);
+
+if (ch == 'a')   kllapat nese vendos +2 instruksione
+	printf();
+else if(){}
+else
+	printf();
+
+if (1)
+	if(0)
+		do this
+else
+			do that
+             if(0) and else are connected even thought there are not in 			the same collumn, spaces don't matter
+
+switch (test){
+	case(  ):	
+		ska nevoj;
+		per kllapa;
+		break
+	case(test1  ): mungo break
+	case(test2  ):  vazhdon direkt, mund edhe te perdoret zgjuaresisht
+		break
+	default:
+}
+
+Cdo instruksion else eshte i lidhur me instruksionin me te afert if, i cili nuk ka instruksionin e tij else
+
+|| or,   && and    ! not
+
+perparesia e operatoreve
+! -  (not, minus)
+* / %  
++ -
+< > <= >= 
+== != 
+&& ||
+= += -=  /= */ %=
+
+
+max = (num1 > num2)   ?  num1             :      num2;
+				if  True          max = num1   else   max = num2
+
+void function(float){}
+int function(int var){
+	int var = 1;
+	return var;}          
+
+nese percaktimi i funksionit behet para thirrjes se tij, prototipi nuk eshte i domosdoshem
+
+prototipi i funksionit:  vendoset te dhenat e funk para se te thirret
+void function(int, int);
+main{
+.....
+function(num1, num2);
+}  
+function{}
+
+return kthen vetem nje vlere
+
+
+const int var;           // global variable
+
+int var;             //global variable
+void main(){}
+
+#define name printf("");
+#difine PI 3.1415
+#define PR(n) printf("$.2f", n);
+
+#define SHUMA(x, y)  x + y;
+rez = 10 * SHUMA(3,4);   rez = 10 * 3 + 4;        ERROR
+
+#define PRODUKT(x, y)  (x * y);
+rez = PRODUKT(2_3, 4)   rez = 2 + 3 * 4;           ERROR
+
+#define PRODUKT(x, y) ((x) * (y));                      RIGHT
+
+#include
+
+vektor => liste
+int temper[7]  
+liste me 7 elemente
+for (dita=0; dita<7; dita++){
+	scanf("%d", &temper[dita]);
+int tabele[5] = {1, 2, 3, 4, 5};
+
+ìnicializimi i listave behet jashte main-it
+ata  nuk mund te inicializohen nese eshte deklaruar si variabel lokal,
+gjuha C e krijon vektorin lokal vetem ne momentin kur funksioni ku ai eshte deklaruar e theret
+ne kete moment eshte vone te behet inicializimi
+
+POR mund te vendoset emri static perpara
+static int tabele[5] = {1, 2, 3, 4, 5}
+vazhdojne te ekzistojne edhe kur mbaron ekzekutimi i funksionit brenda te cilit eshte deklaruuar
+
+nese vektori eshte deklaruar si variabel global apo static ai inicializohet automatikisht me vlerat 0
+
+matriksa
+table[3][2] = {       {1,0, 1,1},
+					     {2.0, 2.1},
+				 	     {3.0, 3.1}      }
+
+stringu vektor karakteresh
+char emri[15]
+
+char emri[] = {'E', 'm', 'r', 'i', '\0'}
+char emri[] = "Emri";
+static char persh[] = "pershendetje";    
+#static sepse vektoret s'inicializohen direkte
+
+pointer konstant eshte nje adrese,  nuk ndryshohet asnjehere
+pointer variabel eshte nje variabel per te ruajtur nje adrese
+px dhe py jane variabla pointer
+1310 dhe 1312 jane konstante pointer 
+pointeri eshte variable me adrese mrena
+
+kthe(int *);
+main(){
+	int x
+	kthe(&x)
+}
+kthe(int *px){
+	*px = 4
+}
+
+*(num + indeks) == num[indeks]
+
+&num[2] == (num + 2) == 1000(adresa)
+num[2] == *(num + 2) == 20(numer)
+
+strch(str, 'x') returns a pointer with the first caracter found
+
+pskills:
+printf("%d",i);
+i=i+2;
+if(i<=20)
+goto pskills;
+
+printf("2") returns number of bytes it printed
+
+storage classes in C are automatic and static 
+storage class specifiers : auto, register, extern static
+
+scopes: body, function, program and file scope
+
+sturctures are lists with diferent types of data
+
+struct name{
+	char emri[30];
+	int kodi;
+	int paga;
+}; //Roni, Eri;
+struct name Roni = {"Dlanor", 001, 20000}
+struct name Eri ....
+....
+
+Roni.emri
+Roni.kodi
+
+
+struct klient{
+	char emri[30];
+	int kodi;
+};
+
+struct klientela{
+	struct klient perhershem;
+	struct klient rastesishem;
+};
+
+struct kientela klientela1 = {   {"Ron", 001},
+									   {"Er", 002}  };
+
+klientela1.perhershem.emri
+klientela1.rastesishem.kodi
+
+struct klient klientvek[50];   vektor me 50 strukt.
+klientvek[n].emri
+
+
+
+
+
+
+
+
+
+
+
+

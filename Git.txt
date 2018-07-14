@@ -1,0 +1,216 @@
+GIT
+
+repository is a folder that git is going to manage
+keep old versions of files and branching, basicly the smarts
+
+it all happens in the local computer
+
+---git init 										makes the folder 'smart'										//////////	
+
+there is a hidden directory 
+cd .git   		the temporary files and information that git needs to use are stored here also means that git is installed
+
+3 areas
+	-untracked file  and unstaged changes			files not added to git       unstaged are files that are in git but changed
+	-staged files									staged is the ready are, the next commit is going to take from the staged files
+	-committed										permenant version marked
+	
+---git status  										tracks the untracked phase or staged phase						//////////
+---git add text.txt    								from untracked file to staged areas								//////////
+---git status 										tells us that text.txt is 'changes to be commited'				//////////
+
+---git commit -m 'first commit' 					records the file and the state that its in 						//////////
+
+
+git status 
+#
+#
+#On branch master
+#
+#
+#Changes to be committed: 							staged 
+#			new file:   text.txt
+#			modified: 	text2.txt
+#
+#Changes not staged for commit:						unstaged changes 
+#			modified  	text3.txt
+#
+#Untracked files: 									untracked files 
+#
+#						text4.txt 
+#
+
+
+'-m' means your going to pass a comment, or else its going to open a texteditor
+git status wont tell you the commits, they are recorded in history, no need to worry
+
+---git log 											shows all the commits  											//////////
+---git log --oneline
+
+nice feature of git is that git commit takes only the staged files, without disturbing the unstaged ones
+
+if you want to unstage a file  you
+---git reset HEAD text.txt  						from staged files to unstaged category							//////////
+
+untracked files are files not in git 
+unstaged changes are files in git that have not been saved
+git commit takes all the files  
+
+---git add * 										add everything in the directory unstaged or untracked 			//////////
+
+a branch is a playarea, your own are where the commits won't been seen
+master won't be able to see the commits untill i tell it so
+you work on branch master as shows git status 
+
+---git branch 										lists all the branches 											//////////
+---git branch red-feature							usually the branches are features 								//////////
+---git branch 										* tells you where are you working 								//////////
+red-feature 
+*master 	
+---git checkout red-feature 						changes to red-feature branch 									//////////
+---git checkout -b blue-feature 					creates and checkouts to it in the same time					//////////
+---git branch -d blue-feature                       -d is delete													/////////
+
+when you checkout to a branch, your commits won't be seen to the other branches
+the commits do only apply to your specific branch
+
+unstaged and staged will apply to all the branches, untill you will commit them will they apply   
+example:  red-feature changes the readme, stages it and when we change to blue-feature it will still apear as unstages/stages 
+only when you commit it will apply to your branch
+git log at red-feature and git log at master aren't the same 
+
+working copy is the folder and all the files in it 
+git checkout overwrites the working copy real time to match the lastest commit of that branch
+MASTER: instructions  and readme           RED: red-feature.txt  
+when you checkout to red the instructions and readme are deleted and red-feature is inserted
+
+if you have some unsaved changes and want to checkout the files instead of beeng deleted it will show an error
+error: Your local changes to the following files would be overwritten by checkout:  text.txt
+You can either save the file or return tho te lastes commit of that file 
+---git checkout text.txt   overwrites the file to match the lastest commit											//////////
+
+merging is incorporating the changes from one branch into another branch 
+master, red-feature. Merging takes all the commits and applies to the lastest commit of master 
+---git checkout master 								we want to update master										//////////
+---git merge red-feature 							merges the red-feature to master 								//////////
+git log of master has all the commits of red-feature 
+
+<side note>  git commit . commits all the files exept the files that start with . like .project or .git
+
+there can be many repositories, they can have a copy of your repository 
+you can communicate by asking for changes or giving the changes, the problem is that you have to commit the changes to all 9 repositories or 
+by asking for 9 changes, each of the repositories in itself has to ask or commit to the other 9 repositories.
+
+You can solve this by having a central repository that you commit your code daily.l This place is called gitHub
+Its a server online that you can host your repositories. Its no different from the other repositories 
+ 
+WIth websites you use the username and password, so they know its you, authonticating
+command like git push, git pull, git fetch talk to remote repositories, like GitHub
+GitHub doesn't want people to push when its not your account
+SSH key is a way to authonticate your machine
+The request sends the SSH key, if this key is able to push and pull than ok
+
+---git remote add origin git@github.com:user/repository.git    				'remote' references the remote repo to the github, it recognises it.
+origin is a keyword that can be called as wished, and the address, git has its own protocoll
+
+---git remote -v                                                			v is verbose, it tells you the premisions
+---git remove rm origin      												removes this repo as remote-v tells 
+
+---git push																	
+push the master branch to the 'origin', you can push 
+only the branches that already been there, 
+if it does not know the branch you must specify 
+---git push -u origin master 																						//////////
+
+git push from local repo to remote server, 'here are all my commits, push all the commits for all matching branches 
+---git push origin			(only matching branches) only the branches that exist in both machines 					//////////
+after created a new repo, a git push origin does nothing, you can specify the branch by 'git push origin master<branch-name>'
+because you don't have the master branch, you have to specify it. It creates a master-branch to GitHub 
+after this one a simple git push <remote> works  (remember you don't have to use origin) 
+
+git push origin <branch>   	when you take of the <branch> it will update all matching branches 
+							when you take of origin the remote repo assumes its origin so 'git push' is equivalent to 'git push origin'
+
+the local repo is divedid in 2 sections, local branches(the ones we have been working this time) 
+and remote tracking branch, just like a normal branch(you can do branches, merge them) but you cannot checkout, you cannot change the working copy
+key brige betweet remote repo and local repo 
+---git branch -r(remote)  													origin/master and origin/feature(if you have them) 
+---git fetch takes the code from GitHub and update remote branches, so in the middle are, after that you manualy merge tham to local branches 
+GitHub   ->  origin/master(remote branch)  ->  master(local branch)
+
+<side note> 
+---git clone 	server 															clones all the commits and repos into the file
+</side note>
+
+---git fetch (origin)    	From github.com:user/repo   master -> origin/master 	
+code has come from github to remote branches, now could merge the origin/master to master 
+---git checkout master      git(Your branch is behind 'origin/master' by 1 commit, adn can be fast-forwarded.
+---git merge origin/master 
+
+---git pull                 is git fetch + git merge  
+it can be dangerous, thats why its not really used much.  
+
+Pull Requests
+If you have a project open-source people will create features, instead of merging in their local repo they upload it to GitHub 
+and than GitHub will merge them for you. If you are sceptical you might not want everyone to merge their features without 'controlling' them
+a pull request is like this:  i want to merge this, can you look at it.    Yeah looks good, i'll merge it for you.  You can controll who's merging 
+documenting before merging, not merging but preparing and waiting for comments & stuff
+after someone merges it you git fetch and git checkout maseter, git merge origin/master because you actually havn't merged it in your local repo 
+
+<-----------------------------------                 WORKFLOW            ------------------------------>
+Start off								Collaborating 						Working 
+-create project							-Go onto GitHub						-git fetch          
+-add files 								-Add users							-git checkout master            
+-git init 								-git clone(grab URL)				-git merge origin/master
+-create GitHub repository													-Private Branches
+																					i.   git checkout -b mybranch 
+																					ii.  do work 
+																					iii. git add. 
+																					iv.  git commit -m "Hello"
+																					v.   git checkout master 
+																					v1.  git merge mybranch
+																			-Non_Private Branches 
+																				    i.   git checkout -b mybranch2
+																					ii.  do work 
+																					iii. git add .
+																					iv.  git commit -m 'changes'
+																					v.   git push origin mybranch2 
+																					vi.  Let Someone Else
+																					vii. Someone Else merged
+																					viii.git fetch 
+																					ix.  git checkout master 
+																					x.   git merge origin/master 
+
+<-----------------------------------                 WORKFLOW            ------------------------------>																			
+
+
+a fast forward merge is not a command - it's more a result of git merge. Basically when you run 'git merge [other-branch]'  
+you are telling git to merge in the changes from the other branch onto your own branch. 
+Now depending on the state of your branches and your tree, git will either do a fast-forward merge or a recursive strategy merge. 
+A fast-forward merge is clean, because git doesn't really have to do anything except move your branch pointer along the tree. 
+A recursive strategy merge actually has to figure out how to combine code and create a new state. 
+So either way you, you as a user end up using 'git merge [other-branch]', and git then decides what type of merge it needs to perform.﻿
+
+Rebasing,orgonises dhe repo for fast-forward or easier tracking 
+rebase feature with master 
+master:   Commit1, commit2, 
+created branch 'feature',  feature1, feature 2
+so:   commit1  -> commit2 -> commit3 -> commit 4
+						  -> feature1 -> feature2
+after rebasing its:  commit1 -> commit2 -> commit3 -> commit4 -> feature1 -> feature2 
+
+if you want to change the base of feature you have to checkout to it 
+---git checkout feature 
+---git rebase master 
+---git checkout master 
+---git merge feature 
+Fast-foreward
+
+
+
+
+
+
+
+
+
