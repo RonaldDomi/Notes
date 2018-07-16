@@ -1,6 +1,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BASICS 					BASICS 					BASICS 					BASICS 					BASICS 					BASICS 					BASICS 	
 
+<side note how to use>
+
+flash('Text', 'danger/success')       #after flash you either redirect or render_template 
+return render_template('file.html')   #templates/file.html 
+return redirect(url_for('home'))      #home is the name of the function, def home(): template home.html 
+
+</side note !how to use>
+				
 pip install flask
 
 from flask import Flask, render_template, url_for, redirect, flash
@@ -8,22 +17,22 @@ from flask import Flask, render_template, url_for, redirect, flash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'random giberish'
 
-flash('Text', 'danger/success')       /after flash you either redirect or render_template 
-return render_template('file.html')   /templates/file.html 
-return redirect(url_for('home'))      /home is the name of the function, def home(): template home.html 
- 
-
-@app.route('/home')
+@app.route('/home')                           # page/home.html  
+@app.route('/')								  # page 
 def home():
-	return render_template('home.html')        you can add variables as arguments
- 
+	return render_template('home.html', title='Home Page')       #you can add variables as arguments
+																 #than you can access {{ title }} inside the template
 
 if __name__ == '__main__':
     app.run(debug=True)
 	
-
+	
+	
+BASICTS 					BASICTS 					BASICTS 					BASICTS 					BASICTS 					BASICTS 					BASICTS 					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-FORMS	FORMS	FORMS 	FORMS  	FORMS	FORMS  	FORMS  	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	
+FORMS						FORMS						FORMS						FORMS						FORMS						FORMS						FORMS						
+
+	
 																 																		form.py
 pip install flask-wtf
 																																		
@@ -47,42 +56,41 @@ class LoginForm(FlaskForm):
 																																		
 from form import RegistrationForm, LoginForm
 
-@app.route('/login', methods=['Post', 'Get'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'a@a.com' and form.password.data == 'p':                                            //fake login
+        if form.email.data == 'a@a.com' and form.password.data == 'p':                                            #fake login
             flash('You have been logged in!', 'success')
             return redirect(url_for('home'))
         else: 
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
-@app.route('/register', methods=['Post', 'Get'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-																																		register.html
+register.html
 {% extends 'layout.html' %}
 {% block content %}
 	<div class='content-section'>
-        <form method='post' action=''>
+        <form method='POST' action=''>
 		
-            {{form.hidden_tag()}}                                                              this is linked with the secret key
+            {{form.hidden_tag()}}                                                              #this is linked with the secret key
 			
             <fieldset class='form-group'>
                 <legend class='border-bottom mb-4'>Join Today</legend>
                 <div class='form-group'>
                     {{form.username.label(class='form-control-label')}}
 
-                    {% if form.username.errors %}                                         		all 'usernames' can be changed to the class inputs
-                        {{form.username(class='form-control form-control-lg is-invalid')}}		for example, password, confirm_password or email
+                    {% if form.username.errors %}                                         		#all 'usernames' can be changed to the class inputs
+                        {{form.username(class='form-control form-control-lg is-invalid')}}		#for example, password, confirm_password or email
                         <div class='invalid-feedback'>
                             {% for error in form.username.errors %}
                                 <span> {{error}} </span>
@@ -101,14 +109,14 @@ def register():
     </div>
 	<div class='border-top pt-3'>
         <small class='text-muted'>
-            Already Have An Account? <a  class='ml-2' href='url_for("login")'>Sign In</a> 
+            Already Have An Account? <a  class='ml-2' href='{{url_for("login")}}'>Sign In</a> 
         </small>
     </div>
 {% endblock content %}
 	
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-																																		login.html
+
+login.html
 	
 {% extends 'layout.html' %}
 {% block content %}
@@ -146,7 +154,7 @@ def register():
     </div>
     <div class='border-top pt-3'>
         <small class='text-muted'>
-            Need An Account? <a  class='ml-2' href='url_for("register")'>Sign Up Now</a>
+            Need An Account? <a  class='ml-2' href='{{url_for("register")}}'>Sign Up Now</a>
         </small>
     </div>
 {% endblock content %}
@@ -163,7 +171,7 @@ def register():
 {% endwith %}
 	
 
-FORMS	FORMS	FORMS 	FORMS  	FORMS	FORMS  	FORMS  	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	FORMS	
+FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		
 	
@@ -177,6 +185,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -261,7 +270,7 @@ THIS IS A MODULE
 THIS IS A PACKAGE 
 a package only has a file named __init__.py
 
-|-->flaskblog ------|--> __init__.py							includes flask, sqlalchemy, flaskblog.routes.py(import routs after db   				   				creates app, db
+|-->flaskblog ------|--> __init__.py							includes flask, sqlalchemy, from flaskblog import routes(import routs after db )    	   				creates app, db
 |					|
 |					|--> forms.py								includes wtforms
 |					|
@@ -298,13 +307,6 @@ a package only has a file named __init__.py
 	
 STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE			
-	
-	
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			
@@ -333,6 +335,7 @@ bcrypt = Bcrypt(app)
 	
 routes.py 
 from flaskblog import app, db, bcrypt
+
 def register()
 	if form.validate_on_submit():
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -357,12 +360,18 @@ class RegistrationForm():
 	# VALIDATION ERROR TEMPLATE
 	
 	def validate_username(self, username):
-		user = User.query.filter_by(username=username.data).first()	
-		if user:
-			raise ValidationError('That username is taken. Please choose a different one')
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one')
 	#almost same for email
-	
 
+	
+DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 	
+
+
+				
 pip install flask-login	
 __init__.py 
 from flask_login import LoginManager
@@ -372,7 +381,7 @@ models.py
 from flaskblog import db, login_manager 
 from flask_login import UserMixin
 
-class user(db.Model, UserMixin):
+class user(db.Model, UserMixin):            # beware if the UserMixin here!!!
 	.......
 
 @login_manager.user_loader
@@ -383,9 +392,10 @@ routes.py
 from flask_login import login_user, current_user, logout_user
 
 def login():
+	if current_user.is_authenticated:
+		return redirect(url_for('home'))
+	form = LoginForm()
 	if form.validate_on_submit():          #overwrite
-		if current_user.is_authenticated:
-			return redirect(url_for('home'))
 		user = User.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.remember.data)
@@ -397,12 +407,18 @@ def login():
 def register():
 	if current_user.is_authenticated:
 		return redirect(url_for('home'))
+	form = ...
+	....
 	
-	
+USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					
+
 @app.route('/logout')
 def logout():
 	logout_user()
 	return redirect(url_for('home'))
+	
 	
 layout.html
 ......
@@ -415,24 +431,22 @@ layout.html
 	{% endif %}
 </div>
 
+USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			
+
 routes.py
 ....
 @app.route('/account')
 def account():
-	return render_template('account.html', title='Account')
-	
-account.html
-{% extends 'layout.hmlt' %}
-{% block content %}
-	<h1> {{ current_user.username }}</h1>
-{% endblock content 
+	return render_template('account.html', title='Account') 		#current_user.username inside the content block, create it
 
 layout.html
 ......
 <div class='navbar-nav'>
 	{% if current_user.is_authenticated %}
-		<a href='{{url_for("logout") }}'> Log out </a>
-		<a href='{{url_for("account") }}'> Account </a>
+		<a class="nav-item nav-link" href='{{url_for("logout") }}'> Log out </a>
+		<a class="nav-item nav-link" href='{{url_for("account") }}'> Account </a>
 ......
 
 routes.py
@@ -446,8 +460,12 @@ def account():
 
 __init__.py
 ....
-login_manager.login_view = 'login' #function name
+login_manager.login_view = 'login' #function name to where is beeing redirected
 login_manager.login_message_category = 'info'
+
+USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					 
 
 routes.py
 from flask import ..., request 
@@ -460,34 +478,299 @@ def login():
 		if user and bcrypt ....:
 			login_user
 			next_page = request.args.get('next')
-			return redirect(next_page) if next_page else redirect(url_for('home'))
+			return redirect(next_page) if next_page else redirect(url_for('home'))		#beware of the new redirect link!!!!!
 		
-DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+	
+	
+	
+REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				
+	
+account.html 
+
+#snipets
+#overwrite 
+<img class='rounded-circle account-img' src='{{ image_file }}'>
+	<h2 class='account-heading'>{{ current_user.username }}</h2>
+	<h2 class='account-heading'>{{ current_user.email }}</h2>
+	
+??inside the static folder add a profile_pics folder(nested) that has default.png 
+	
+routes.py 
+...
+
+def account():
+	image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+	return render_template('account.html', image_file=image_file)  							#beware of image_file!!
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE					USING DATABASE							
+ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		
+
+forms.py 
+from flask_login import current_user
+
+class UpdateAccountForm(FlaskForm):
+	username = ....#as usual
+	email = .......#as usual	
+	submit = ......#as usual   label=> update
+
+	def validate_username(self, username):
+        if username.data != current_user.username:
+            user = User.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        if email.data != current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('That email is taken. Please choose a different one.') 
+	
+	
+registration template, copy the form and add it to account.html,  
+where it says from here, and modify, delete passwords, change legend
+<div class='content-section'>
+	#stuff
+</div> 
+<div class=''>
+	Already have an account?
+</div>
+	
+	
+
+routes.py 
+from flaskblog.forms import UpdateAccountForm 
+....
+
+@app.route('/account', methods=['Get', 'Post')
+def account():
+	form = UpdateAccountForm()
+	if form.validate_on_submit():
+		current_user.username = form.username.data 
+		current_user.email = form.email.data 
+		db.session.commit()
+		flash('your account has been updated', 'success')
+		return redirect(url_for('account'))
+	elif request.method == 'GET':
+		form.username.data = current_user.username 
+		form.email.data = current_user.email
+	imagefile = ....
+	return render_template(...., form=form)  #beware of the form!!!
 
 	
+UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE			
+forms.py 
+from flask_wtf.file import FileField, FileAllowed 
+
+class Update...()
+	....
+	picture = FileField('Update Profile picture', validators=[FileAllowed(['jpg', 'png'])])
+
+	
+	
+account.html 
+....
+<form method='Post' action='' enctype='multipart/form-data'>         #beware of the enctype!!!!
+		<div class='form-group'>
+			{{ form.picture.label() }}
+			{{ form.picture(class="form-control-file") }}
+			{% if form.picture.errors %}
+				{% for error in form.picture.errors %}
+					<span class='text-danger'> {{error }} </span></br>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</fieldset>
+</form>
+	
+	
+routes.py #pip install Pillow
+import secrets, os
+from PIL import Image
+... 
+
+def save_picture(form_picture):
+	random_hex = secrets.token_hex(8) #8 bytes 
+	_, f_ext = os.path.splitext(form_picture.filename) #within python if you want to throw a name you use a ' _ '
+	picture_fn = random_hex + f_ext
+	picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+	
+	output_size = (125, 125)
+	i = Image.open(form_picture)
+	i.thumbnail(output_size)
+	
+	i.save(picture_path)
+	
+	return picture_fn
+ 
+def account():
+	if form.validate_on_submit():
+		if form.picture.data:
+			picture_file = save_picture(form.picture.data)
+			current_user.image_file = picture_file
+		
+		....
+	
+	
+	
+	
+	
+
+UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				
+
+
+
+forms.py
+from wtforms import TextAreaField 
+...
+class PostForm(FlaskForm):
+	title = StringField('Title', validators=[DataRequired()])
+	content = TextAreaField('Content', validators=[DataRequired()])
+	submit = SubmitField('Post')
+
+routes.py 
+from flaskblog.forms import PostForm
+....
+@app.route('/posts/new', methods=['GET', 'POST'])
+@login_required 
+def new_post():
+	form = PostForm()
+	if form.validate_on_submit():
+		flash('your post has been created!', 'success')
+		return redirect(url_for('home')) 
+	return render_template('create_post.html', title='New Post', form=form)
+	
+create_post.html 
+{% extends 'layout.html' %}
+{% block content %} #copy content section div from login to create_post, legend to new post, edit form.title.label and form.content.label, 
+					#checkbox remember me not needed, delete the forgot password
+	
+{% endblock content
+
+layout.html 
+...
+	<a class='nav-item nav-link' href='{{ url_for('new_post' }}> New Post </a>
+	<a class='nav-item nav-link' href='{{ url_for('account' }}> Account </a>
+
+routes.py 
+....
+
+def new_post():
+	if form.validate_on_submit():
+		post = Post(title= form.title.data, content=form.content.data, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		....
+		
+def home():        #delete the posts dummy data 
+	posts = Post.query.all()
+	...
+	
+@app.route('/post/<int:post_id>')  #/post/1 is post_id 1 of type int
+def post(post_id):
+	post = Post.query.get_or_404(post_id)
+	return render_template('post.html', title=post.title, post=post)
+
+home.html 
+...
+<article>
+	<img class='rounded-circe artice-img' src='url_for('static', filename='profile_pics/' + post.author.image_file) }}'>
+	...
+		<a class='mr-2' href='#'>{{ post.author.username }}</a>
+		<small class='text-muted'> {{ post.date_posted.strftime('%Y-%m-%d') }}<small>
+		
+		<h2><a class='article-title'> href='{{ url_for('post', post_id=post.id) }}> {{post.title }}</a></h2>
+
+	
+posts.html 
+#from home.html copy paste all
+#no need for the 'for loop'
+...
+<h2 class='article-title'>{{post.title}}</h2>#removed the <a>, added the class
+...
+	
+	
+	
+
+
+
+CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				
+	
+routes
+from flask import abort
+....
+@app.route('/post/<int:post_id>/update', methods=['POST', 'GET')
+@login_required
+def update_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	if post.author != current_user:
+		abort(403)
+	form = PostForm()
+	if form.validate_on_submit():
+		post.title = form.title.data 
+		post.content = form.content.data 
+		db.session.commit()
+		flash('Your post has been updated!', 'success')
+		return redirect(url_for('post', post_id=post.id))
+	elif request.method == 'GET':
+		form.title.data = post.title 
+		form.content.data = post.content
+	return render_template('create_post.html', title='Update Post', 
+						form=form, legend='Update Post')
+	
+def new_post():
+	...
+	return render_template(....., legend='New Post')
+
+
+create_post.py 
+	..
+	<legend>{{ legend }}</legend>
+	
+	
+UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				
+
+
+post.html 
+.... 
+	<small>
+	{% if post.author == current_user %}
+		<a class='btn btn-secondary btn-sm mt-1 mb-1' href='{{url_for("update_post", post_id = post.id) }}'>Update</a>
+		<button type='button' class='btn btn-danger btn-sm m-1'>Delete</button> #in here add data-toggle and data-target='#deleteModal'
+	{% endif %}
+	</div> 
+	<h2> 
+</article> 
+		#in here coppy paste from bootstrap all the code from the model, change everywhere where exampleModal to deleteModal(3)
+		#change the modal title, Delete Post?, delete the modal body, from save changes(delete it), add this 
+		#<form action='{{url_for("delete_post", post_id=post.id)}}' method='post'>
+		#<input class='btn btn-danger' type='submit' value='Delete'>
+
+routes.py 
+... 
+
+@app.route('/post/<int:post_id>/delete', methods=['GET', 'POST']
+@login_required
+def delete_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	if post.author != current_user:
+		abort(403)
+	db.session.delete(post)
+	db.session.commit()
+	flash('Your post has been deleted!', 'success')
+	return redirect(url_for('home'))
+	
+	
+DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
