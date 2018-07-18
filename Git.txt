@@ -19,7 +19,7 @@ cd .git   		the temporary files and information that git needs to use are stored
 ---git add text.txt    								from untracked file to staged areas								//////////
 ---git status 										tells us that text.txt is 'changes to be commited'				//////////
 
----git commit -m 'first commit' 					records the file and the state that its in 						//////////
+---git commit -m "first commit" 					records the file and the state that its in 						//////////
 
 
 git status 
