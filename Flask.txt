@@ -23,6 +23,15 @@ def home():
 	return render_template('home.html', title='Home Page')       #you can add variables as arguments
 																 #than you can access {{ title }} inside the template
 
+html files, or templates are inside templates folder 
+templates/home.html
+home.html
+{% extends 'layout.html' %}
+{% block %}
+{% endblock %}
+
+layout.html 
+#basic html															 
 if __name__ == '__main__':
     app.run(debug=True)
 	
@@ -32,8 +41,14 @@ BASICTS 					BASICTS 					BASICTS 					BASICTS 					BASICTS 					BASICTS 					BA
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 FORMS						FORMS						FORMS						FORMS						FORMS						FORMS						FORMS						
 
-	
-																 																		form.py
+STEPS TO BE TAKEN:
+-create forms classes 
+-create routes to link with the forms 
+-create html templates to render 
+-update layout to show errors 
+
+
+form.py
 pip install flask-wtf
 																																		
 from flask_wtf import FlaskForm 
@@ -52,7 +67,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
-																																		main.py
+
+	
+main.py
 																																		
 from form import RegistrationForm, LoginForm
 
@@ -82,15 +99,17 @@ register.html
 	<div class='content-section'>
         <form method='POST' action=''>
 		
-            {{form.hidden_tag()}}                                                              #this is linked with the secret key
+            {{form.hidden_tag()}}                                                              
 			
             <fieldset class='form-group'>
                 <legend class='border-bottom mb-4'>Join Today</legend>
                 <div class='form-group'>
                     {{form.username.label(class='form-control-label')}}
 
-                    {% if form.username.errors %}                                         		#all 'usernames' can be changed to the class inputs
-                        {{form.username(class='form-control form-control-lg is-invalid')}}		#for example, password, confirm_password or email
+                    {% if form.username.errors %}                                         		
+                        {{form.username(class='form-control form-control-lg is-invalid')}}
+						#all 'usernames' can be changed to the class inputs						
+						#for example, password, confirm_password or email
                         <div class='invalid-feedback'>
                             {% for error in form.username.errors %}
                                 <span> {{error}} </span>
@@ -139,16 +158,18 @@ login.html
                         {{form.email(class='form-control form-control-lg')}}
                     {% endif %}
                 </div>
-				
-                <small class='text-muted ml-2'>
+				<div class="form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label") }}
+                </div>
+            </fieldset>
+			<div class='form-group'>
+                {{form.submit(class='btn btn-outline-info')}}
+				<small class='text-muted ml-2'>
                     <a href='#'>
                         Forgot Password?
                     </a>
                 </small>
-				
-            </fieldset>
-			<div class='form-group'>
-                {{form.submit(class='btn btn-outline-info')}}
             </div>
         </form>
     </div>
@@ -173,7 +194,13 @@ login.html
 
 FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS			FORMS				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		
+DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 	
+
+STEPS TO BE TAKEN: 
+-initialize db 
+-create models
+
+	
 from flask_sqlalchemy import SQLAlchemy
 pip install flask-sqlalchemy
 
@@ -243,6 +270,12 @@ DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DATABASE 		DAT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTUR		STRUCTUR		STRUCTUR		
 	
+STEPS TO BE TAKEN: 
+-create __init__.py inside a folder called flaskblog 
+-create routes file and put inside corresponding files 
+-create models file with the models 
+-create a run.py outside flaskblog just to app.run()
+-fix the imports and be carefull of circular imports 
 	
 To this point the structure of the files looked like this:
 THIS IS A MODULE
@@ -269,7 +302,7 @@ THIS IS A MODULE
 THIS IS A PACKAGE 
 a package only has a file named __init__.py
 
-|-->flaskblog ------|--> __init__.py							includes flask, sqlalchemy, from flaskblog import routes(import routs after db )    	   				creates app, db
+|-->flaskblog ------|--> __init__.py							includes flask, sqlalchemy, from flaskblog import routes(import routes after db )    	   				creates app, db
 |					|
 |					|--> forms.py								includes wtforms
 |					|
@@ -326,8 +359,13 @@ bcrypt.check_password_hash(hashed_pw, 'testing')
 
 HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+CREATE USERS AND CHECK IF DUPLICATE 					CREATE USERS AND CHECK IF DUPLICATE 					CREATE USERS AND CHECK IF DUPLICATE 					
 	
+STEPS TO BE TAKEN: #this only creates the users but it cannot login them 
+-initialise brcypt
+-update login in routes/register to create user 
+-update RegistrationForm  logic for duplicate users 
+
 __init__.py
 from flask_bcrypt import Bcrypt 
 bcrypt = Bcrypt(app)
@@ -365,9 +403,14 @@ class RegistrationForm():
 	#almost same for email
 
 	
-DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				DUPLICATE USERS				
+CREATE USERS AND CHECK IF DUPLICATE					CREATE USERS AND CHECK IF DUPLICATE 					CREATE USERS AND CHECK IF DUPLICATE 					 									
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 	
+
+STEPS TO BE TAKEN: 
+-initialise LoginMangaer
+-update routes/login logic to login user 
+-update routes/register to redirect if loged in 
 
 
 				
@@ -401,7 +444,7 @@ def login():
 			return redirect(url_for('home'))
 		else:
 			flash('Login Unsuccessful..., 'danger')
-	return render_template('login....', title='Login', form=form)
+	return render_template('login.html', title='Login', form=form)
 	
 def register():
 	if current_user.is_authenticated:
@@ -413,6 +456,10 @@ USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					USER LOGIN 					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					
 
+STEPS TO BE TAKEN: 
+-create routes/logout 
+-update layout to have a button 
+
 @app.route('/logout')
 def logout():
 	logout_user()
@@ -421,18 +468,23 @@ def logout():
 	
 layout.html
 ......
-<div class='navbar-nav'>
+<div class='navbar-nav mr-auto'>
 	{% if current_user.is_authenticated %}
-		<a href='{{url_for("logout") }}'> Log out </a>
+		<a class="nav-item nav-link" href='{{url_for("logout") }}'> Log out </a>
 	{% else %}
-		<a href='{{url_for("login") }}'> Log In </a>
-		<a href='{{url_for("register") }}'> Sign Up </a>
+		<a class="nav-item nav-link" href='{{url_for("login") }}'> Log In </a>
+		<a class="nav-item nav-link" href='{{url_for("register") }}'> Sign Up </a>
 	{% endif %}
 </div>
 
 USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					USER LOGOUT					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			
+
+STEPS TO BE TAKEN: 
+-create a account page 
+-update layout.html to have a button 
+-@login_required 
 
 routes.py
 ....
@@ -464,7 +516,11 @@ login_manager.login_message_category = 'info'
 
 USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			USER ONLY PAGES 			
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					 
+REDIRECTING	TO PREVIOUS PAGE							REDIRECTING	TO PREVIOUS PAGE 							REDIRECTING	TO PREVIOUS PAGE 							
+
+STEPS TO BE TAKEN: 
+-update routes/login 
+
 
 routes.py
 from flask import ..., request 
@@ -475,16 +531,20 @@ def login():
 	if form.validate():
 		...
 		if user and bcrypt ....:
-			login_user
+			login_user...
 			next_page = request.args.get('next')
 			return redirect(next_page) if next_page else redirect(url_for('home'))		#beware of the new redirect link!!!!!
 		
 	
 	
 	
-REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					REDIRECTING					
+REDIRECTING	TO PREVIOUS PAGE 							REDIRECTING	TO PREVIOUS PAGE 							REDIRECTING	TO PREVIOUS PAGE 											
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				
+	
+STEPS TO BE TAKEN: 
+-create account.html(image) 
+-create routes/account (image)
 	
 account.html 
 
@@ -508,6 +568,11 @@ def account():
 ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				ACCOUNT PAGE 				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		
+
+STEPS TO BE TAKEN:
+-create new form 
+-update add form to account.html
+-update routes/account logic
 
 forms.py 
 from flask_login import current_user
@@ -545,7 +610,7 @@ routes.py
 from flaskblog.forms import UpdateAccountForm 
 ....
 
-@app.route('/account', methods=['Get', 'Post')
+@app.route('/account', methods=['GET', 'POST')
 def account():
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
@@ -564,6 +629,13 @@ def account():
 UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		UPDATING ACCOUNT PAGE 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE			
+
+STEPS TO BE TAKEN:
+-update accountform to have a picture 
+-update account.html
+-create save picture function
+-update routes/account to save picture
+
 forms.py 
 from flask_wtf.file import FileField, FileAllowed 
 
@@ -616,14 +688,17 @@ def account():
 		
 		....
 	
-	
-	
-	
-	
 
-UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				
+UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE		UPDATE PICTURE DATABASE	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS			
 
+STEPS TO BE TAKEN:
+-create form for posts 
+-create route for new post 
+-create new post template 
+-update layout.html to include new post button 
+-etc(read it)
 
 
 forms.py
@@ -636,6 +711,7 @@ class PostForm(FlaskForm):
 
 routes.py 
 from flaskblog.forms import PostForm
+from flaskblog.models import Post
 ....
 @app.route('/posts/new', methods=['GET', 'POST'])
 @login_required 
@@ -648,7 +724,7 @@ def new_post():
 	
 create_post.html 
 {% extends 'layout.html' %}
-{% block content %} #copy content section div from login to create_post, legend to new post, edit form.title.label and form.content.label, 
+{% block content %} #copy content section div from login to create_post, legend to new post, edit form.title from form.email and form.content from form.password, 
 					#checkbox remember me not needed, delete the forgot password
 	
 {% endblock content
@@ -685,7 +761,7 @@ home.html
 		<a class='mr-2' href='#'>{{ post.author.username }}</a>
 		<small class='text-muted'> {{ post.date_posted.strftime('%Y-%m-%d') }}<small>
 		
-		<h2><a class='article-title'> href='{{ url_for('post', post_id=post.id) }}> {{post.title }}</a></h2>
+		<h2><a class='article-title'> href='{{ url_for('post', post_id=post.id) }}> {{post.title }}</a></h2>  #beware of post.id the dot!!
 
 	
 posts.html 
@@ -703,6 +779,10 @@ posts.html
 CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				CREATING POSTS				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				
+	
+STEPS TO BE TAKEN
+-create route/update_post 
+-update others 
 	
 routes
 from flask import abort
@@ -735,25 +815,36 @@ create_post.py
 	..
 	<legend>{{ legend }}</legend>
 	
+post.html
+...	
+	<small> 
+	{% if post.author == current_user %}
+		<a class='btn btn-secondary btn-sm mt-1 mb-1' href='{{url_for("update_post", post_id = post.id) }}'>Update</a>
+		....
+	
 	
 UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				UPDATE POSTS				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				
 
+STEPS TO BE TAKEN:
+-update post template to have a delete modal 
+-update routes logic
 
 post.html 
 .... 
-	<small>
 	{% if post.author == current_user %}
+		<div>
 		<a class='btn btn-secondary btn-sm mt-1 mb-1' href='{{url_for("update_post", post_id = post.id) }}'>Update</a>
-		<button type='button' class='btn btn-danger btn-sm m-1'>Delete</button> #in here add data-toggle and data-target='#deleteModal'
+		<button type='button' class='btn btn-danger btn-sm m-1' data-toggle='modal' data-target='#exampleModal'>Delete</button>
+		</div>
 	{% endif %}
 	</div> 
-	<h2> 
 </article> 
-		#in here coppy paste from bootstrap all the code from the model, change everywhere where exampleModal to deleteModal(3)
-		#change the modal title, Delete Post?, delete the modal body, from save changes(delete it), add this 
-		#<form action='{{url_for("delete_post", post_id=post.id)}}' method='post'>
+		#in here coppy paste from bootstrap all the code from the model,https://getbootstrap.com/docs/4.0/components/modal/#live-demo, 
+		#change everywhere where exampleModal to deleteModal(3)
+		#change the modal title,  to 'Delete Post?', delete the div modal body, change the save button to:
+		#<form action='{{url_for("delete_post", post_id=post.id)}}' method='POST'>
 		#<input class='btn btn-danger' type='submit' value='Delete'>
 
 routes.py 
@@ -774,6 +865,10 @@ def delete_post(post_id):
 DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				DELETE POSTS 				
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PAGINATION 					PAGINATION 					PAGINATION 					PAGINATION 					PAGINATION 					PAGINATION 					PAGINATION 					
+
+STEPS TO BE TAKEN:
+-update home route 
+-update home template 
 
 #create 30 posts 
 >> from flaskblog.models import Post 
@@ -817,7 +912,7 @@ def home():
 	
 home.html
 {% block content %}
-	{% for post in posts.items %}
+	{% for post in posts.items %}      #beware of posts.items!!!
 	....
 	{% endfor %}
 	{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
@@ -845,12 +940,17 @@ routes.py
 
 def home():
 	...
-	posts = Post.query.order_by(Post.date_posted.desc()).paginame(page=page, per_page=5)  #date_posted descending 
+	posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)  #date_posted descending 
 
 
 ORDER BY OLDEST 			ORDER BY OLDEST 			ORDER BY OLDEST 			ORDER BY OLDEST 			ORDER BY OLDEST 			ORDER BY OLDEST 			ORDER BY OLDEST 			
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				
+
+STEPS TO BE TAKEN:
+-create routes/user posts 
+-create user posts template 
+-update other 
 
 routes.py 
 ....
@@ -859,7 +959,7 @@ routes.py
 
 @app.route('/user/<string:username>')
 def user_posts(username):
-	page = request.qrgs.get('page, 1, type=int)
+	page = request.args.get('page', 1, type=int)
 	user = User.query.filter_by(username=username).first_or_404()
 	posts = Post.query.filter_by(author=user)\
 			.order_by(Post.date_posted.desc())\							#spans next line
@@ -872,6 +972,7 @@ user_posts.html
 .....
 {% block content %}
 	<h1 class='mb-3'>Posts by {{user.username}} ({{posts.total}})</h1>
+	{% for posts in posts.items %}
 	....
 		<div class='article=metadata'>
 			<a class='mr-2' href='{{ url_for("user_posts", username=post.author.username) }}'>
@@ -897,13 +998,15 @@ post.html
 
 			
 ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				ALL POSTS USER				
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 		PASSWORD CHANGE MAIL 			
 
 >> from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 >> s = Serializer('secret', 30)
 >> token = s.dumbs({'user_id': 1}).decode('utf-8')
 >> s.loads(token)  #needs to be under 30 of calling, if you wait more than 30 it will expire
+
+!!!!!!!!!!!!!!pip install flask_mail
 
 models.py
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -912,7 +1015,7 @@ from flaskblog import db, login_manager, app
 class User(db.Model, UserMixin):
 	....
 	
-	def get_reset_toke(self, expires_sec=1800):  #30min 
+	def get_reset_token(self, expires_sec=1800):  #30min 
 		s = Serializer(app.config['SECRET_KEY'], expires_sec)
 		return s.dumps({'user_id': self.id }).decode('utf-8')
 	
@@ -926,10 +1029,11 @@ class User(db.Model, UserMixin):
 		return User.query.get(user_id)
 	...
 	
+form.py
 	
 class RequestResetForm(FlaskForm):
-	email = SubmitField('Email', validators = [DataRequired(), Email()])
-	submit SubmitField('Request Password Reset')
+	email = StringField('Email', validators = [DataRequired(), Email()])
+	submit = SubmitField('Request Password Reset')
 	
 	def validate_email(self, email):
 		user = User.query.filter_by(email=email.data).first()
@@ -939,7 +1043,7 @@ class RequestResetForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	confirm_password = PasswordField('Password', validators=[DataRequired(), EqualTo('password')])
-	submit SubmitField('Password Reset')
+	submit = SubmitField('Password Reset')
 
 
 routes.py 
@@ -949,7 +1053,7 @@ from flaskblog.form import RequestResetForm, ResetPasswordForm
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
-	if curren_user.is_authenticated:
+	if current_user.is_authenticated:
 		return redirect(url_for('home'))
 	form = RequestResetForm() 
 	return render_template('reset_request.html', title='Reset Password', form=form)
@@ -958,7 +1062,10 @@ def reset_request():
 reset_request.html 
 #copy paste login 
 #legend to Reset Password 
-#rid of password, form-check remember, keep submit button, remove text of 'forgot password', and need-account get rid of it 
+#rid of password,  keep submit button, 
+#remove text of 'forgot password', 
+#rid of need password 
+#rid of form_check remember,
 	
 	
 routes.py 
@@ -967,11 +1074,11 @@ routes.py
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
 	if current_user.is_authenticated:
-	return redirect(url_for('home'))
+		return redirect(url_for('home'))
 	user = User.verify_reset_token(token)
 	if user is None:
 		flash('That is an invalid or expired token', 'warning')
-		return redirect(url_for('reset_reqeust'))
+		return redirect(url_for('reset_request'))
 	form = ResetPasswordForm()
 	return render_template('reset_token.html', title='Reset Password', form=form)
 	
@@ -987,7 +1094,7 @@ routes.py
 def send_reset_email(user):
 	pass
 
-def reset_reset():
+def reset_request():
 	...
 	form = ..
 	if form.validate_on_submit():
@@ -1016,11 +1123,11 @@ from flask_mail import Message
 	
 def send_reset_email(user):
 	token = user.get_reset_token()#default kicks in 
-	msg = Message('Password Reset Request', sender = 'noreply@demo.com, recipients=[user.email])   #usually email from your domain or your actual email address
+	msg = Message('Password Reset Request', sender = 'noreply@demo.com', recipients=[user.email])   #usually email from your domain or your actual email address
 	#multi line string 
 	
 	msg.body = f'''  To reset your password, visit the following link: 
-url_for('reset_token', token=token, _external=True)} /*f_string, variable, and t */ 
+url_for('reset_token', token=token, _external=True)}  
 		
 If you did not make this request then sumply ignore this email and no changes will be made.
 '''
@@ -1028,7 +1135,7 @@ If you did not make this request then sumply ignore this email and no changes wi
 	
 def reset_token(token):
 	...
-	form = ResetpasswordForm()
+	form = ResetPasswordForm()
 	if form.validate_on_submit():
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 		user.password = hashed_password 
@@ -1043,8 +1150,8 @@ login.html
 <div class='form-group'>
 	{{ form.submit(....
 	<small class='text-muted ml-2'>
-		<a href=' {{url_for('reset_request') }}>
-	</small 
+		<a href=' {{url_for('reset_request') }}>Forgot Password? </a>
+	</small>
 </div>
 </form>
 .....
