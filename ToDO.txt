@@ -1,0 +1,59 @@
+--------------------- Notes --------------
+
+login in all of the pages, gets it from layout
+#make Log In 
+#admin make SignOut
+#hash password of admin 
+
+/home 	 		home section but url=> home#contact
+/home 			i press the home button and it refreshes, no need
+/home 			blogs read more button doesn't work                 #Read more href to href='/blog/{{post.id}}'
+
+layout 			different languages													
+layout 			footbar links not working							
+layout 			logo link doesn't work 								#href="{{url_for('home')}}"
+
+/bloglist 		home/blog doesn't work(index.html) 					#href="{{url_for('home')}}"
+/bloglist 		doesn't need a navbar, no need to go to contacts + it doesn't work   #create a second layout2.html 
+/bloglist		bloglist/page=2#contact 
+/bloglist 		pagination pages,   1 None 3 4 5  None 12			#the {% else %} ... {% endif %}
+/bloglist 		comments/likes? 
+#note all the blogs are from Matteo, so no need to add his photo/username in the blogs 
+
+/blog/<id>  	there are 2 titles and 2 subtitles
+/blog/<id>  	his account and share options??
+/blog/<id>  	blog/1#contact
+/blog/<id>  	i cannot go to blog -> /blog/bloglist 
+
+/admin-page 	extends nothing
+/admin-page		Profile not working work 
+/admin-page 	Blog link not working
+/admin-page 	footbar links not working 
+#pressing the title sends to blog/<id>
+#pressing the tag doesn't redirect? url the same 
+/admin-page 	edit/delete buttons not working
+
+#maybe a /admin/profile to show the stats
+/admin/profile/update 		navbar overlaps with the content
+/admin/profile/update		no need for logins if he's in his account
+/admin/profile/update		flash messages are only for developping, i should get rid of them
+
+/admin/blog_new 			i should add a image input to update the image from here 
+/admin/blog_new 			should add margins, change the legend too
+
+/admin/blog/<id>/edit 		doesn't work 
+
+/admin/blog/<id>/delete    	this is not a route
+
+/invalid-page               i need to add margin, overlaping 
+
+----------------  changes made -----------------
+
+from admin-page to admin/admin-page #keeping consistencies with the urls
+added error handlers for 404, 403 and 500
+
+
+
+
+
+
