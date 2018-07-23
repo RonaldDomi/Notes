@@ -229,7 +229,6 @@ class Post(db.Model):
     
     def __repr__(self):
         return f"User('{self.title}'), ('{self.date_posted}')"
-
 		
 >>CONSOLE
 from flaskblog import db 
@@ -338,8 +337,6 @@ a package only has a file named __init__.py
 	
 	
 STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		STRUCTURE		
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			HASHING PASSWORDS			
 pip install flash-bcrypt
@@ -1362,7 +1359,10 @@ flaskblog
 	static 
 		main.css 
 		profile_pics 
-			default.jpg 
+			default.jpg
+	errors
+		__init__.py 
+		handlers.py
 	templates 
 		about.html
 		account.html
@@ -1385,9 +1385,9 @@ ERROR PAGES 				ERROR PAGES 				ERROR PAGES 				ERROR PAGES 				ERROR PAGES 				
 	
 #create folder errors 
 flaskblog/errors/__init__.py 
-error/__init__.py
-error/handlers.py 
+flaskblog/errors/handlers.py 
 
+errors/handlers.py
 from flask import Blueprint, render_template 
 
 errors = Blueprint('errors', __name__)
