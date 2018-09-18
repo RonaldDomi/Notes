@@ -1,0 +1,87 @@
+
+from bleach.sanitizer import (
+    ALLOWED_ATTRIBUTES,
+    ALLOWED_PROTOCOLS,
+    ALLOWED_STYLES,
+    ALLOWED_TAGS,
+    Cleaner,
+)
+
+def clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
+          styles=ALLOWED_STYLES, protocols=ALLOWED_PROTOCOLS, strip=False,
+          strip_comments=True):
+    """Clean an HTML fragment of malicious content and return it
+
+    This function is a security-focused function whose sole purpose is to
+    remove malicious content from a string such that it can be displayed as
+    content in a web page.
+
+    This function is not designed to use to transform content to be used in
+    non-web-page contexts.
+
+    Example::
+
+        import bleach
+
+        better_text = bleach.clean(yucky_text)
+
+
+    .. Note::
+
+       If you're cleaning a lot of text and passing the same argument values or
+       you want more configurability, consider using a
+       :py:class:`bleach.sanitizer.Cleaner` instance.
+
+    :arg str text: the text to clean
+
+    :arg list tags: allowed list of tags; defaults to
+        ``bleach.sanitizer.ALLOWED_TAGS``
+
+    :arg dict attributes: allowed attributes; can be a callable, list or dict;
+        defaults to ``bleach.sanitizer.ALLOWED_ATTRIBUTES``
+
+    :arg list styles: allowed list of css styles; defaults to
+        ``bleach.sanitizer.ALLOWED_STYLES``
+
+    :arg list protocols: allowed list of protocols for links; defaults
+        to ``bleach.sanitizer.ALLOWED_PROTOCOLS``
+
+    :arg bool strip: whether or not to strip disallowed elements
+
+    :arg bool strip_comments: whether or not to strip HTML comments
+
+    :returns: cleaned text as unicode
+
+    """
+    print(ALLOWED_PROTOCOLS)
+    cleaner = Cleaner(
+        tags=tags,
+        attributes=attributes,
+        styles=styles,
+        protocols=protocols,
+        strip=strip,
+        strip_comments=strip_comments,
+    )
+    return cleaner.clean(text)
+
+
+@bp.route('/summernote', methods=['POST', 'GET'])
+def summernote():
+    # attributes = ['style', 'target', 'href', 'title', 'class', 'frameborder', 'src', 'width', 'height', 'data-filename']
+    attributes = {
+        '*': ['style', 'target', 'href', 'title', 'class', 'frameborder', 'src', 'width', 'height', 'data-filename']
+    }
+    styles=['color', 'background-color', 'font-family', 'font-weight', 'text-decoration-line', 'text-align', 'width', 'line-height']
+    tags=['a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'br', 'ol', 'li', 'ul', 'table', 'tbody', 'tr', 'td', 'iframe', 'img']
+    if request.method == 'POST':
+        cleaned_data = clean(request.form.get('editordata'), tags=tags, attributes=attributes, styles=styles)
+        new_data = EditorData(html=cleaned_data)
+        # new_data = EditorData(html=request.form.get('editordata'))
+        db.session.add(new_data)
+        db.session.commit()
+        return render_template('summernote.html')
+
+    return render_template('summernote.html')
+
+
+from getawayalbania.funk import clean

@@ -1,0 +1,14 @@
+
+routes.py
+from flask_login import login_required 
+.....
+
+@app.route('/account')
+@login_required 
+def account():
+	....
+
+__init__.py
+....
+login_manager.login_view = 'login' #function name to where is beeing redirected
+login_manager.login_message_category = 'info'

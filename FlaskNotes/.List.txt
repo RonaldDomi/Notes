@@ -1,0 +1,2 @@
+wysiwyg editor bleaches everything exept the images 
+translations are improvized with config items,   app.config['LOCALE']

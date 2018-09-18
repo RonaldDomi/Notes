@@ -1,0 +1,128 @@
+Variables can be modified with filters, which are added after the variable name with a
+pipe character as separator. |
+{{ name|save }}            filters
+By default Jinja2 escapes all variables for security purposes. For example, if a variable is set to 
+the value '<h1>Hello</h1>', Jinja2 will render the string as '&lt;h1&gt;Hello&lt;/h1&gt;', 
+which will cause the h1 element to be displayed and not interpreted by the browser. 
+Many times it is necessary to display HTML code stored in variables, and for those cases the safe filter is used.
+----------------------------------------------------------------------------------------------------------------------
+<p>A value from a dictionary: {{ mydict['key'] }}.</p>
+<p>A value from a list: {{ mylist[3] }}.</p>
+<p>A value from a list, with a variable index: {{ mylist[myintvar] }}.</p>
+<p>A value from an object's method: {{ myobj.somemethod() }}.</p>
+----------------------------------------------------------------------------------------------------------------------
+Jinja2 supports macros, which are similar to functions in Python code. For example:
+
+{% macro render_comment(comment) %}
+	<li>{{ comment }}</li>
+{% endmacro %}
+
+<ul>
+	{% for comment in comments %}
+		{{ render_comment(comment) }}
+	{% endfor %}
+</ul>
+
+To make macros more reusable, they can be stored in standalone files that are then
+imported from all the templates that need them:
+{% import 'macros.html' as macros %}
+<ul>
+	{% for comment in comments %}
+		{{ macros.render_comment(comment) }}
+	{% endfor %}
+</ul>
+----------------------------------------------------------------------------------------------------------------------
+Relative URLs are sufficient when generating links that connect the
+different routes of the application. Absolute URLs are necessary only for 
+links that will be used outside of the web browser, such as when
+sending links by email.
+----------------------------------------------------------------------------------------------------------------------
+Static files are treated as a special route defined as /static/<filename>. 
+For example, a call to url_for('static', filename='css/styles.css', _external=True) would return
+http://localhost:5000/static/css/styles.css.
+contents of a file in the filesystem located at static/css/styles.css.
+
+----------------------------------------------------------------------------------------------------------------------
+The server needs uniform time units that are independent of the location of each user,
+so typically Coordinated Universal Time (UTC) is used. For users, however, seeing times
+expressed in UTC can be confusing, as users always expect to see dates and times pre‐
+sented in their local time and formatted according to the local customs of their region.
+An elegant solution that allows the server to work exclusively in UTC is to send these
+time units to the web browser, where they are converted to local time and rendered.
+Web browsers can do a much better job at this task because they have access to time
+zone and locale settings on the user’s computer.
+
+ pip install flask-moment
+
+from flask-moment import Moment
+moment = Moment(app)
+ 
+moment depends on jquery.js and moment.js
+<head>
+	<title>Flask-Moment example app</title>
+	{{ moment.include_jquery() }}
+	{{ moment.include_moment() }}
+</head>
+
+<p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+<p>That was {{ moment(current_time).fromNow(refresh=True) }}</p>
+The format('LLL') format renders the date and time according to the time zone and
+locale settings in the client computer. The argument determines the rendering style,
+from 'L' to 'LLLL' for different levels of verbosity. The format() function can also
+accept custom format specifiers.
+The fromNow() render style shown in the second line renders a relative timestamp and
+automatically refreshes it as time passes. Initially this timestamp will be shown as “a few
+seconds ago,” but the refresh option will keep it updated as time passes, so if you leave
+the page open for a few minutes you will see the text changing to “a minute ago,” then
+“2 minutes ago,” and so on
+
+The timestamps rendered by Flask-Moment can be localized to many languages. A
+language can be selected in the template by passing the language code to function
+lang():
+{{ moment.lang('es') }}
+----------------------------------------------------------------------------------------------------------------------
+StringField 			Text field
+TextAreaField 			Multiple-line text field
+PasswordField 			Password text field
+HiddenField 			Hidden text field
+DateField 				Text field that accepts a datetime.date value in a given format
+DateTimeField 			Text field that accepts a datetime.datetime value in a given format
+IntegerField 			Text field that accepts an integer value
+DecimalField 			Text field that accepts a decimal.Decimal value
+FloatField 				Text field that accepts a floating-point value
+BooleanField 			Checkbox with True and False values
+RadioField 				List of radio buttons
+SelectField 			Drop-down list of choices
+SelectMultipleField 	Drop-down list of choices with multiple selection
+FileField 				File upload field
+SubmitField 			Form submission button
+FormField 				Embed a form as a field in a container form
+FieldList 				List of fields of a given type
+
+Email 					Validates an email address
+EqualTo 				Compares the values of two fields; useful when requesting a password to be entered twice for confirmation
+IPAddress 				Validates an IPv4 network address
+Length 					Validates the length of the string entered
+NumberRange 			Validates that the value entered is within a numeric range
+Optional 				Allows empty input on the field, skipping additional validators
+Required 				Validates that the field contains data
+Regexp 					Validates the input against a regular expression
+URL 					Validates a URL
+AnyOf 					Validates that the input is one of a list of possible values
+NoneOf 					Validates that the input is none of a list of possible values
+---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------

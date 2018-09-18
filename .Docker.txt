@@ -1,0 +1,119 @@
+13042002	ronidocker+1  ronalddomi4@gmail.com
+<--------------------------------
+docker
+docker version
+docker info
+docker container run -it -p 80:80 nginx
+docker container ls -a
+docker container rm 95asc #first 5 characters
+docker container rm $(docker ps -aq) -f #remove all
+
+docker images
+docker image rm a3ft
+docker pull nginx
+docker container run -d -p 8000:80 --name mynginx nginx
+docker container run -d -p 8001:80 --name myapache httpd
+docker container ls == docker ps
+
+docker container run -d -p 3306:3306 --name mysql --env MYSQL_ROOT_PASSWORD=1234 mysql
+
+docker container stop mysql 
+docker container rm myapache #cannot remove a running container, should use force
+docker container stop mysql -f
+
+docker container exec -it myngix bash
+cd usr/share/nginx/html
+ls
+>>50x.html index.html
+exit #exit bash
+<-------------------------------
+apache -> port:80
+nginx -> port:80
+flask -> port:5000
+mysql -> port::3306
+
+:after bashing into the containers
+apache ->
+nginx -> cd usr/share/nginx/html  -> ls  index.html
+
+<-------------------------------
+  BASH
+  
+  docker
+tells all the subcommands 
+
+  docker version
+  docker info
+
+  docker container run -it -d -p 80:80 nginx
+interactive mode, everytime i refresh the logs are shown in the console
+public
+second port is what is exposed
+first is whatever
+nginx is the name of the image, if it doesn't find the image it is pulled down 
+
+hub.docker.com has all the information
+it also has the env variables and such
+you search for an image and see all the info 
+you can also pull it manually,  docker pull nginx
+
+  DOCKER FILE
+  FROM debian:stretch-slim
+debian  Linux  distributian
+stretch-slim is the version
+so the environement
+
+  docker container ls -a 
+shows all the container in the computer
+  docker container ls 
+show all the working containers, 
+  docker container rm 85a  *id 
+after you docker container ls -a it is removed
+  docker rm $(docker ps -aq) -f
+
+  docker images
+all the images
+  docker image rm cse  *id 
+it is removed after you docker images 
+  docker pull nginx  
+pulls a image without a container 
+
+  docker container run -d -p 8080:80 --name mynginx nginx
+detached, background 
+mynginx is the name i chose, the nginx is the name of the actual image
+  docker container run --rm
+removed when it exits or when daemon exits 
+  docker container ls 
+  docker ps 
+same as container ls 
+this command tells all the working containers 
+
+  docker container run -d -p 3306:3306 --name mysql --env MYSQL_ROOT_PASSWORD=12345 mysql 
+you can see the environmental variables in the hub.docker 
+  docker container stop mysql
+  docker container rm myapache
+you cant remove a runnig container 
+  docker container rm myapache -f 
+force removal 
+  
+  docker container exec -it mynginx bash
+
+open the bash to show all the folders
+to edit files in the docker container file
+you can map the root html folder shown at the top to 
+
+a folder with all the html instead of editing the actual container
+create some files 
+  docker container run -d -p 8080:80 -v C:\Users\User\Desktop\Hello:/usr/share/nginx/html --name test2 nginx
+-v is the area from the local machine to map to a area in the container 
+
+  
+
+  docker container start --detach-keys string mynginx 
+starting a container
+
+
+
+-------------------
+make that bind mount work 
+ 

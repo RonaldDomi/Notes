@@ -1,0 +1,48 @@
+followers = db.Table('followers',
+                    db.Column('follower_id', db.Integer, db.ForeignKey('athletes.id')),
+                    db.Column('followed_id', db.Integer, db.ForeignKey('athletes.id'))
+                    )
+
+
+class Athlete(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    def follow(self, athlete):
+        if not self.is_following(athlete):
+            self.followed.append(athlete)
+
+    def unfollow(self, athlete):
+        if self.is_following(athlete):
+            self.followed.remove(athlete)
+
+    def is_following(self, athlete):
+        return self.followed.filter(
+            followers.c.followed_id == athlete.id).count() > 0
+
+@bp.route('/follow/<username>')
+@login_required
+def follow(username):
+    athlete = Athlete.query.filter_by(username=username).first()
+    if athlete is None:
+        return redirect(url_for('main.athletes'))
+    current_user.follow(athlete)
+    db.session.commit()
+    return redirect(url_for('main.profile', username=username))
+
+@bp.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    athlete = Athlete.query.filter_by(username=username).first()
+    if athlete is None:
+        return redirect(url_for('main.dashboard'))
+    current_user.unfollow(athlete)
+    db.session.commit()
+    return redirect(url_for('main.profile', username=username))
+
+-------------
+user1.follow(user2)
+user2.follow(user3)
+
+user1.unfollow(user1)
+user2.is_following(user3)
+>>True

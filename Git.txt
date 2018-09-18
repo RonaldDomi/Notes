@@ -1,5 +1,8 @@
 GIT
 
+---git branch tmp 60b794a37c14d9c89df710c406707ba93611b58d
+to save this commit to master
+
 repository is a folder that git is going to manage
 keep old versions of files and branching, basicly the smarts
 
@@ -110,11 +113,11 @@ GitHub doesn't want people to push when its not your account
 SSH key is a way to authonticate your machine
 The request sends the SSH key, if this key is able to push and pull than ok
 
+---git remove rm origin      												removes this repo as remote-v tells 
 ---git remote add origin git@github.com:user/repository.git    				'remote' references the remote repo to the github, it recognises it.
 origin is a keyword that can be called as wished, and the address, git has its own protocoll
 
 ---git remote -v                                                			v is verbose, it tells you the premisions
----git remove rm origin      												removes this repo as remote-v tells 
 
 ---git push																	
 push the master branch to the 'origin', you can push 

@@ -1,0 +1,38 @@
+SSH to server, secure shell
+
+from your PCs console
+>>ssh -p 2222 forcewing@50.87.144.180 
+>>password:  1Oe4wlqGe#u5
+
+create a subdomain 
+>>cd subdomain.domain.com 
+>>ls
+there will be by default a .htacess, .well-known, .cgi-bin
+
+create files
+>>mkdir folder
+>>touch file 
+
+installing software
+>>pip install virtualenv
+>>python -m virtualenv env (name)
+if you want to use gits or source controll, you must gitignore this file 
+>>ls 
+.htacess, .well-known, cgi-bin, env, folder, file 
+
+user@server.com [~/subdomain.domain.com]#
+>>source env/bin/activate
+(env)user@server.com[~/subdomain.domain.com]#
+
+
+
+
+
+
+
+
+
+
+
+
+

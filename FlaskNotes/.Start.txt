@@ -1,0 +1,22 @@
+flask run --host 0.0.0.0
+
+installing virtual environment
+python3 -m venv venv
+
+creating virtual environment
+$ virtualenv venv 
+$ source venv/bin/activate
+(venv) $ _
+
+export FLASK_APP=microblog.py
+set FLASK_APP=microblog.py
+FLASK_DEBUG=1 #0    
+(venv) $ flask run
+
+(venv) $ pip install python-dotenv
+environment variable name and value in a .flaskenv file in the top-level directory of the project:
+MAIL_SERVER = smtp.googlemail.com
+MAIL_PORT=587
+MAIL_USE_TLS = 1
+MAIL_USERNAME=forcewing.worker@gmail.com
+MAIL_PASSWORD=ForcewingWorker123

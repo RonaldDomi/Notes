@@ -1,0 +1,12 @@
+@bp.route('/open/<filename>')
+def open_file(filename):
+    uploads = os.path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'])
+    return send_from_directory(directory=uploads, filename=filename, mimetype='application/pdf')
+
+	
+config.py	
+UPLOAD_FOLDER = os.path.join('schedules', 'uploads')
+
+<a href='{{url_for("main.open_file", filename=schedule.name)}}'>
+	<p> Schedule: {{schedule.name}}</p>
+</a>

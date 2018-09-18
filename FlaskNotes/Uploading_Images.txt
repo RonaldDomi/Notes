@@ -1,0 +1,73 @@
+forms.py 
+from flask_wtf.file import FileField, FileAllowed 
+
+---image_path---
+image_file = url_for('static', filename='profile_pics/' + current_user.image_file)          #static/profile_pics/image.jpg
+
+-----optional image-------
+def update_post(post_id):
+	if form.validate_on_submit():
+		post.title = form.title.data
+		if 'image_file' in request.files:
+			image_file = save_picture(form.image_file.data, 'post_pics', 900, 900)
+			photo_image_file = url_for('static', filename='post_pics/' + image_file)
+			post.image_file = photo_image_file
+
+-----
+class UpdateAccountForm():
+	picture = FileField('Update Profile picture', validators=[FileAllowed(['jpg', 'png'])])
+
+	
+	
+
+<form method='Post' action='' enctype='multipart/form-data'>         #beware of the enctype!!!!
+		<div class='form-group'>
+			{{ form.picture.label() }}
+			{{ form.picture(class="form-control-file") }}
+			{% if form.picture.errors %}
+				{% for error in form.picture.errors %}
+					<span class='text-danger'> {{error }} </span></br>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</fieldset>
+</form>
+	
+	
+routes.py #pip install Pillow
+import secrets, os
+from PIL import Image
+... 
+
+def save_picture(form_picture, dest_folder, output_size_1, output_size_2):
+    #save_picture saves picture from user input to static folder, hashing the filename  
+    #form_picture is the file name of the input
+    #desc_folder is the folder where the image is 
+    f_name, f_ext = os.path.splitext(form_picture.filename)
+
+    picture_fn = f_name + f_ext
+    picture_path = os.path.join(app.root_path, 'static/', dest_folder, picture_fn)
+
+    output_size = (output_size_1, output_size_2)
+    i = Image.open(form_picture)
+    i = i.convert('RGB')
+    # i.thumbnail(output_size)
+    i = ImageOps.fit(i, output_size, Image.ANTIALIAS)
+
+    i.save(picture_path)
+
+    return picture_fn
+ 
+def account():
+	if form.validate_on_submit():
+		if form.picture.data:
+			picture_file = save_picture(form.picture.data)
+			current_user.image_file = picture_file
+		
+		db.session.commit()
+		flash('your account has been updated', 'success')
+		return redirect(url_for('account'))
+	elif request.method == 'GET':
+		form.username.data = current_user.username 
+		form.email.data = current_user.email
+	return render_template(form=form)  #beware of the form!!!

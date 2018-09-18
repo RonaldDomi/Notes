@@ -1,0 +1,27 @@
+
+	{% if post.author == current_user %}
+		<button type='button' data-toggle='modal' data-target='#exampleModal'>Delete</button>
+	{% endif %}
+	</div> 
+</article> 
+		#in here coppy paste from bootstrap all the code from the model,https://getbootstrap.com/docs/4.0/components/modal/#live-demo, 
+		#change everywhere where exampleModal to deleteModal(3)
+		#change the modal title,  to 'Delete Post?', delete the div modal body, change the save button to:
+		#<form action='{{url_for("delete_post", post_id=post.id)}}' method='POST'>
+		#<input class='btn btn-danger' type='submit' value='Delete'>
+-------------
+<a href="{{url_for('delete_post', post_id=post.id)}}">
+-------------
+routes.py 
+... 
+
+@app.route('/post/<int:post_id>/delete', methods=['GET', 'POST']
+@login_required
+def delete_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	if post.author != current_user:   #not letting other users(if multiple) to edit our posts
+		abort(403)
+	db.session.delete(post)
+	db.session.commit()
+	return redirect(url_for('home'))
+	

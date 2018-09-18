@@ -1,0 +1,52 @@
+
+STEPS TO BE TAKEN:
+-create form for posts 
+-create route for new post 
+-create new post template 
+-update layout.html to include new post button 
+
+
+forms.py
+from wtforms import TextAreaField 
+...
+class PostForm(FlaskForm):
+	title = StringField('Title', validators=[DataRequired()])
+	content = TextAreaField('Content', validators=[DataRequired()])
+	submit = SubmitField('Post')
+
+	
+	
+	
+routes.py 
+from flaskblog.forms import PostForm
+from flaskblog.models import Post
+....
+
+def home():
+	posts = Post.query.all()
+
+@app.route('/posts/new', methods=['GET', 'POST'])
+@login_required 
+def new_post():
+	form = PostForm()
+	if form.validate_on_submit():
+		post = Post(title= form.title.data, content=form.content.data, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		flash('your post has been created!', 'success')
+		return redirect(url_for('home')) 
+	return render_template('create_post.html', title='New Post', form=form)
+
+	
+	
+	
+routes.py 
+....
+
+@app.route('/post/<int:post_id>')
+def post(post_id):
+	post = Post.query.get_or_404(post_id)
+	return render_template(post=post)
+
+	
+url_for('post', post_id=post.id)

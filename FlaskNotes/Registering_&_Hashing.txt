@@ -1,0 +1,63 @@
+from flask_bcrypt import Bcrypt 
+bcrypt = Bcrypt()
+bcrypt.generate_password_hash('testing')
+>> b'2938j*rj2098j389j)*j30*J)(J(#)3094043'												#the b in the begining means it is in bytes
+hashed_pw = bcrypt.generate_password_hash('testing').decode('utf-8')
+>> '2938j*rj2098j389j)*j30*J)(J(#)3094043'												# now its just a string
+bcrypt.check_password_hash(hashed_pw, 'password')
+>> False 
+bcrypt.check_password_hash(hashed_pw, 'testing')
+>> True 
+
+
+__init__.py
+from flask_bcrypt import Bcrypt 
+bcrypt = Bcrypt(app)
+	
+
+forms.py 
+from flaskblog.models import User
+from wtforms.validators import ValidationError
+
+class RegistrationForm():
+	....
+	....
+	
+	#def validate_field(self, field):
+	#	if True:
+	#		raise ValidationError('Validation Message')
+	# VALIDATION ERROR TEMPLATE
+	
+	def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one')
+	#almost same for email
+	
+
+models.py
+class Athlete(db.Model):
+	
+	password_hash = db.Column(db.String(128))
+
+	def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+routes.py 
+from flaskblog import app, db, bcrypt
+
+def register()
+	if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        athlete = Athlete(username=form.username.data, name=form.name.data, email=form.email.data)
+        athlete.set_password(form.password.data)
+		db.session.add(user)
+		db.session.commit()
+		return redirect(url_for('login'))
+	return render_template('register.html', form=form)
+		

@@ -1,0 +1,48 @@
+Apache root directory: /bar/www/html/...
+
+
+Nginx(2006) -webserver that serves static/dynamic content, another webserver is Apache 
+Why:
+    -speed
+   -acceleration
+you can have more than 1 webserver at the same app, if you add nginx as a webserver it accelerates performance by routing trafic to those webservers in a way that enhances.
+You also can add Nginx not as a webserver but as a reverse proxy(service) that recieves the requests on behalf of the backend webserver and is responsible for handling it to the appropriate backend webserver also to handle the repsonse back to the client.
+Your lifting the weight into nginx.
+   -load balancing
+if you have a lot of trafic you buy another webserver to share the trafic. Nginx has a way to balance this distribution
+   -scalable concurrent connections handling
+traditional webserveces can handdle a lot of concurrent(at the same time) request, say 1000. 1000 requests at the same time. By doubling the resources you cannot double the connections. Nginx don't have this problem, its scalable
+  -the ability to operate on relatively cheap hardware
+perform betten on limited hardware capabilities  than its counterparts
+  -on the fly upgrades
+upgraded the environment without taking it down
+  -ease of installation and maintenance
+
+
+abilities:
+ -can work alongside other webserves like a reverse proxy
+ -features are activated/deactivated using modules
+ -asynchronous way of serving requests
+tradition webservers use threads, a worker produced by CPU to handle a task, after it is finished the thread can be again
+nowdays CPU have multi-threading, but after all the threads are ocupied, the next cliend has lag and bad UI, Nginx uses events which greatly improves speed
+ - an serve many protocols
+ -SSL(secure socket layer)(decrypt/encrypt the content) is not used in the backed webserver but reverse proxy does it
+ -nginx excels when it comes to serving large files or streaming media, big files block the thread, asynchronous nginx fixes this
+
+nginx vs apache:
+ -nginx can be used with apache 
+ -nginx uses less resources
+ -apache is more popular on operating systems
+ -nginx as a load balancer and/or a reverse proxy, great combination with apache  
+ -nginx needs more effort for dynamic content languages
+ -apache can install modules more easily, nginx has to be recompiled from source
+
+
+
+nginx -v
+nginx -V
+
+(same directory)
+start nginx
+nginx -s stop 
+

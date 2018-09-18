@@ -1,0 +1,74 @@
+page = request.args.get('page', 1, type=int)   #1 is the default, and error if not int 
+posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)  #date_posted descending 
+	
+{% for post in posts.items %}      #beware of posts.items!!!
+	
+{% endfor %}
+
+{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+	{% if page_num %}
+	
+		{% if posts.page == page_num %}
+			<a  href='{{ url_for("home", page=page_num) }}'>{{page_num}}</a>
+		{% else %}
+			<a  href='{{ url_for("home", page=page_num) }}'>{{page_num}}</a>
+		{% endif %}<!-- maybe a different color -->
+		
+		
+	{% else %}
+		...
+	{% endif %}
+{%endfor %}
+
+-----
+@app.route('/user/<string:username>')
+def user_posts(username):
+	page = request.args.get('page', 1, type=int)
+	user = User.query.filter_by(username=username).first_or_404()
+	
+	
+	
+	posts = Post.query.filter_by(author=user)			  \
+				.order_by(Post.date_posted.desc())        \							
+				.paginate(page=page, per_page=5)
+			
+	posts = Post.query.order_by(Post.date_posted.desc())  \
+					  .limit(3).all()
+			
+	posts = Post.query.paginate(per_page=5)
+			
+	return render_template('user_posts.html', posts=posts, user=user)
+------------
+	{% for posts in posts.items %}
+	
+			<a class='mr-2' href='{{ url_for("user_posts", username=post.author.username) }}'>
+	
+	{% endfor %}
+	
+	
+----
+>> from flaskblog.models import Post 
+>>posts = Post.query.all()
+
+>>posts = Post.query.paginate()
+>>dir(posts) 							#tells us all the functions and methods to this object 
+
+>>posts.per_page
+20										#20 is default 
+>>posts.page 				
+1
+
+>>posts = Post.query.paginate(page=2)
+>>for post in posts.items: print(posts) #gets the other 10 posts
+...
+
+>>posts = Post.query.paginate(per_page=5)
+>>for post in posts.items: print(posts) #gets 5 values, the first 5 
+..
+
+>>posts = Post.query.paginate(per_page=5, page=2)
+>>posts.page  							#2
+
+>>posts.total
+30
+-----

@@ -1,0 +1,35 @@
+>>> from app import db
+>>> from app.models import User, Post
+While you work on your application, you will need to test things out in a Python shell very often, 
+so having to repeat the above imports every time is going to get tedious.
+>>flask shell
+The purpose of this command is to start a Python interpreter in the context of the application. 
+
+he following function in microblog.py creates a shell context that adds the database instance and models to the shell session:
+
+from app import app, db
+from app.models import User, Post
+
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User, 'Post': Post}
+    
+The app.shell_context_processor decorator registers the function as a shell context function. 
+When the flask shell command runs, it will invoke this function and register the items returned by it in the shell session. 
+The reason the function returns a dictionary and not a list is that for each item you have to also provide a name 
+under which it will be referenced in the shell, which is given by the dictionary keys.
+
+After you add the shell context processor function you can work with database entities without having to import them:
+
+(venv) $ flask shell
+>>> db
+<SQLAlchemy engine=sqlite:////Users/migu7781/Documents/dev/flask/microblog2/app.db>
+>>> User
+<class 'app.models.User'>
+>>> Post
+<class 'app.models.Post'>
+
+If you try the above and get NameError exceptions when you access db, User and Post, then the make_shell_context() 
+function is not being registered with Flask. The most likely cause of this is that you have not set FLASK_APP=microblog.py 
+in the environment. In that case, go back to Chapter 1 and review how to set the FLASK_APP environment variable.
+

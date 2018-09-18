@@ -1,0 +1,93 @@
+form.py
+pip install flask-wtf
+																																		
+from flask_wtf import FlaskForm 
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, EqualTo
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2,max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
+	
+-----------
+
+you can leave something empty and populate it from the database
+this makes them dynamic, usually done for the SelectFields
+
+#choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')]
+#if you select C++, cpp is returned so be carefull
+DropDown = SelectField('Name', choices=[], validators=[DataRequired()])
+
+def new_post():
+
+	form = PostForm()
+	choiceList = [(choice.name, choice.name) for choice in Model.query.all()]
+	form.dropdown.choices = choiseList
+#this needs to be done every route you need to see the dropdown  
+-----------
+	
+main.py
+																																		
+from form import RegistrationForm, LoginForm
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == User.query.filter_by(email=form.email.data):
+			pass
+    return render_template('login.html', title='Login', form=form)
+
+login.html
+	
+{% extends 'layout.html' %}
+{% block content %}
+    <div class='content-section'>
+        <form method='post' action=''>
+            {{form.hidden_tag()}}
+            <fieldset class='form-group'>
+                <legend class='border-bottom mb-4'>Login</legend>
+                <div class='form-group'>
+                    {{form.email.label(class='form-control-label')}}
+
+                    {% if form.email.errors %}
+                        {{form.email(class='form-control form-control-lg is-invalid')}}
+                        <div class='invalid-feedback'>
+                            {% for error in form.email.errors %}
+                                <span> {{error}} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}    
+                        {{form.email(class='form-control form-control-lg')}}
+                    {% endif %}
+                </div>
+                <div class="form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label") }}
+                </div>
+            </fieldset>
+			<div class='form-group'>
+                {{form.submit(class='btn btn-outline-info')}}
+				<small class='text-muted ml-2'>
+                    <a href='#'>
+                        Forgot Password?
+                    </a>
+                </small>
+            </div>
+        </form>
+    </div>
+    <div class='border-top pt-3'>
+        <small class='text-muted'>
+            Need An Account? <a  class='ml-2' href='{{url_for("register")}}'>Sign Up Now</a>
+        </small>
+    </div>
+{% endblock content %}

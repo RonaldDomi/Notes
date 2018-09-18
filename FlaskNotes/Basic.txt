@@ -1,0 +1,49 @@
+
+flash('Text', 'danger/success')       #after flash you either redirect or render_template 
+return render_template('file.html')   #templates/file.html 
+return redirect(url_for('home'))      #home is the name of the function, 
+									  #def home(): template home.html 
+				
+pip install flask
+
+
+from flask import Flask
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'random giberish'
+if __name__ == '__main__':
+    app.run(debug=True)
+	
+	
+	
+@app.route('/home')                           # page/home.html  
+@app.route('/')								  # page 
+def home():
+	return render_template('home.html', title='Home Page')       #you can add variables as arguments
+																 #than you can access {{ title }} inside the template
+
+																 
+																 
+html files, or templates are inside templates folder 
+templates/home.html
+home.html
+{% extends 'layout.html' %}
+{% block %}
+{% endblock %}
+
+layout.html 
+#basic html			
+
+
+layout.html, before the block content
+Flash Messages
+{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+	  {% for category, message in messages %}
+		<div class="alert alert-{{ category }}">
+		  {{ message }}
+		</div>
+	  {% endfor %}
+	{% endif %}
+{% endwith %}
+												 

@@ -1,0 +1,53 @@
+THIS IS A PACKAGE 
+a package only has a file named __init__.py
+
+
+ -->migrations 
+|
+ -->flaskblog ------|--> __init__.py							from config import Config     app.config.from_object(Config)
+|					|
+|					|--> forms.py								includes wtforms
+|					|
+|					|--> models.py								includes flaskblog.db
+|					|
+|					|--> routes.py								includes render_template, url_for, flash, redirect, flaskblog.models.py, flaskblog.forms.py, app     	creates routes
+|					|
+|					|--> site.db
+|					|
+|					|
+|					|--> static ----> main.css
+|					|
+|					 --> templates ---------------->	home.html 							includes layout.html
+|											 	|
+|												|--> 	layout.html                        	includes main.css, bootstrap
+|												|
+|												|-->  	login.html 							includes layout.html 
+|												|
+|												|--> 	register.html 						includes layout.html 
+|												|
+|												 --> 	about.html 							includes layout.html
+|				
+|
+ -->run.py					
+|		from app import app, db
+|		from app.models import User, Post
+|														
+|															
+|		@app.shell_context_processor
+|		def make_shell_context():
+|			return {'db': db, 'User': User, 'Post': Post}
+|
+ -->config.py
+|		import os 
+|		basedir = os.path.abspath(os.path.dirname(__file__))
+|
+|		class Config(object):
+|			SECRET_KEY = os.environ.get('SECRET_KEY') or '203jr082jfpf3'
+|			SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///' + os.path.join(basedir, 'app.db')
+|			SQLALCHEMY_TRACK_MODIFICATIONS = False
+ -->.flaskenv
+|		FLASK_APP=microblog.py
+|		
+ -->venv
+		
+		

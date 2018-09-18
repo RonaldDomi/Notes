@@ -1,0 +1,49 @@
+pip install flask-login	
+
+
+
+__init__.py 
+from flask_login import LoginManager
+login_manager = LoginManager(app)
+
+
+
+
+
+models.py 
+from flaskblog import db, login_manager 
+from flask_login import UserMixin
+
+class user(db.Model, UserMixin):            # beware if the UserMixin here!!!
+	.......
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+	
+	
+	
+	
+	
+	
+routes.py 
+from flask_login import login_user, current_user, logout_user
+
+def login():
+	if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        athlete = Athlete.query.filter_by(username=form.username.data).first()
+        if athlete is None or not athlete.check_password(form.password.data):
+            
+            return redirect(url_for('main.login'))
+        login_user(athlete, remember=True)
+        return redirect(url_for('main.dashboard'))
+    return render_template('login.html', title='Sign In', form=form)
+	
+def register():
+	if current_user.is_authenticated:
+		return redirect(url_for('home'))
+	
+	

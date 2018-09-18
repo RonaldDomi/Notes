@@ -1,0 +1,34 @@
+class ScheduleForm(FlaskForm):
+    athlete = SelectField('', choices=[], validators=[DataRequired()])
+    group = SelectField('', choices=[], validators=[DataRequired()])
+
+routes.py
+@bp.route('/schedule', methods=['GET', 'POST'])
+    scheduleForm = ScheduleForm()
+    
+    choiceAthlete = [(choice.username, choice.username) for choice in Athlete.query.all()]
+    choiceAthlete.append(('Send to no athlete', 'Send to no athlete'))
+    choiceAthlete = choiceAthlete[::-1]
+    
+    choiceGroup = [(choice.name, choice.name) for choice in Group.query.all()]
+    choiceGroup.append(('Send to no group', 'Send to no group'))
+    choiceGroup = choiceGroup[::-1]
+
+    scheduleForm.athlete.choices = choiceAthlete
+    scheduleForm.group.choices = choiceGroup
+    if scheduleForm.validate_on_submit():
+        filename = upload_file(request, 'pdf_file')
+
+
+        if scheduleForm.athlete.data != 'Send to no athlete':
+            athlete = Athlete.query.filter_by(username=scheduleForm.athlete.data).first()
+            schedule = Schedule(name=filename, schedule_athlete=athlete)
+            
+        elif scheduleForm.group.data != 'Send to no group':
+            group = Group.query.filter_by(name=scheduleForm.group.data).first()
+            schedule = Schedule(name=filename, schedule_group=group)
+
+        db.session.add(schedule)
+        db.session.commit()
+
+

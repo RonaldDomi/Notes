@@ -1,0 +1,61 @@
+pip install flask-babel 
+-------------------------------------------------------------------
+class Config(object):
+
+    LANGUAGES = ['en', 'es']
+-------------------------------------------------------------------
+from flask import request
+
+# ...
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+-------------------------------------------------------------------
+from flask_babel import _
+# ...
+flash(_('Your post is now live!'))
+flash(_('User %(username)s not found.', username=username))
+
+from flask_babel import lazy_gettext as _l
+-------------------------------------------------------------------
+class LoginForm(FlaskForm):
+    username = StringField(_l('Username'), validators=[DataRequired()])
+    # ...
+-------------------------------------------------------------------
+login = LoginManager(app)
+login.login_view = 'login'
+login.login_message = _l('Please log in to access this page.')
+-------------------------------------------------------------------
+<h1>{{ _('File Not Found') }}</h1>
+<h1>{{ _('Hi, %(username)s!', username=current_user.username) }}</h1>
+
+{% set user_link %}
+    <a href="{{ url_for('user', username=post.author.username) }}">
+        {{ post.author.username }}
+    </a>
+{% endset %}
+{{ _('%(username)s said %(when)s',
+    username=user_link, when=moment(post.timestamp).fromNow()) }}
+-------------------------------------------------------------------
+babel.cfg
+[python: app/**.py]
+[jinja2: app/templates/**.html]
+extensions=jinja2.ext.autoescape,jinja2.ext.with_
+
+-------------------------------------------------------------------
+(venv) $ pybabel extract -F babel.cfg -k _l -o messages.pot .
+(venv) $ pybabel init -i messages.pot -d app/translations -l es
+creating catalog app/translations/es/LC_MESSAGES/messages.po based on messages.pot
+
+(venv) $ pybabel compile -d app/translations
+compiling catalog app/translations/es/LC_MESSAGES/messages.po to
+app/translations/es/LC_MESSAGES/messages.mo
+
+
+
+update procedure 
+(venv) $ pybabel extract -F babel.cfg -k _l -o messages.pot .
+(venv) $ pybabel update -i messages.pot -d app/translations
+(venv) $ pybabel compile -d app/translations

@@ -1,0 +1,217 @@
+
+|-->flaskblog ------|--> __init__.py							
+|					|
+.					.
+.					.
+.					.
+|					|
+|					|
+|					|--> users --------------------> 	__init__.py #empty
+|					|						 	|
+|					|							|--> 	routes.py
+|					|						 	|
+|					|							|--> 	forms.py
+|					|						 	|
+|					|							 --> 	utils.py
+|					|
+|					|
+|					|
+|					|
+|					|--> posts -------------------->	__init__.py #empty 
+|					|						 	|
+|					|							|--> 	routes.py
+|					|						 	|
+|					|							 --> 	forms.py
+|					|
+|					|
+|					|--> main ---------------------> 	__init__.py  #empty
+|					|						 	|
+|					|							|--> 	routes.py
+|					|						 	|
+|					|							 --> 	forms.py
+|					|
+|					|
+.					.
+.					.
+.					.
+|				
+|
+ -->run.py														                 									
+	
+
+	
+users/routes.py 
+from flask import Blueprint
+users = Blueprint('users', __name__)
+
+#from routes.py(original) copy register, login, logout, account, user_posts paste, reset_token, reset_request to user/routes
+#from routes.py(original) save_picture, send_reset_email to user-utils
+	
+#from @app.route change to @users.route
+
+post/routes.py
+from flask import Blueprint 
+posts = Blueprint('posts', __name__)
+
+#from routes.py(original) copy new_post, post, update_post, delete_post to posts/routes
+
+#from @app.route to @posts.route
+	
+
+main/routes.py
+from flask import Blueprint 
+main = Blueprint('main, __name__)
+	
+#from routes.py(original) copy home, about to main/routes 
+#from @app.route to @main.route
+
+
+
+#now the original has only the import 
+	
+	
+users/forms.py
+	
+from old forms file copy RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm to user/forms.py 
+	
+posts/forms.py 
+
+from old forms file copy PostForm to posts/forms.py
+	
+
+	
+bluepirnt_import snipet import accordingly 	
+delete routes and forms files, the originals
+
+
+__init__.py
+
+...
+
+mail = Mail(app)
+
+from flaskblog.users.routes import users  #this is the blueprint
+from flaskblog.posts.routes import posts  #this is the blueprint
+from flaskblog.main.routes import main  #this is the blueprint
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)
+
+
+#change all the url_for functions 
+
+#start with find and replace all the url_for with name/file, like: 
+layout.html :
+ main.home   	Home 
+ main	.about 		About 
+ posts	.new_post  	New Post 
+ users	.account  	Account 
+ users	.logout  	Logout 
+ users	.login   	Login 
+ users	.register   Register
+
+ 
+__init__.py
+....
+
+login_manager.login_view = 'users.login' 
+....
+
+#by now website should be running
+
+	
+flaskblog/config.py
+import os
+
+#from __init__.py copy all that .config and paste here, around 7
+#get rid of all app.config['  and '] so just the names are left 
+#keep the secret information out of the source code, for example the gmail password and email 
+class Config:
+	SECRET_KEY =  os.environ.get('SECRET_KEY')                       		#copy them, open the console, in sublime, subl ~/.bash_profile or open manualy if need be
+	SQLALCHEMY_DATABASE_URL = os.environ.get('SQLALCHEMY_DATABASE_URI') 	#paste the secret_key and url like this:  export SECRET_KEY='giberish'  
+																			#export SQLALCHEMY_DATABASE_URI='sqlite:///site.db'	
+																			#do the same for the email/password
+	.....
+	MAIL_USERNAME = os.environ.get('EMAIL_USER') # you have to set the environ variables yourself
+	MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
+	
+	.....
+
+__init__.py
+from flaskblog.config import Config 
+
+app = Flask(__name__)
+app.config.from_object(Config)
+....
+#remove the app from the initializations, but keep the lines 
+db = SQLAlchemy
+...
+
+def create_app(config_class=Config):
+	#paste this 
+	app = Flask(__name__)
+	app.config.from_object(Config) 
+	
+	db.init_app(app)
+	bcrypt.init_app(app)
+	login_manager.init_app(app)
+	mail.init_app(app)
+	
+	#also paste the blueprints 6lines
+
+	return app
+
+#in the entire project change the 'app' variable 
+#models.py, users/utils, run.py 
+#remove the app import to 'from flask import current_app'
+#change to current_app 
+	
+run.py 
+from flaskblog import create_app 
+app = create_app()
+
+if __name__ == '__main__':
+	app.run(debug=True)
+	
+	
+structure now:
+flaskblog 
+	__init__.py 
+	config.py 
+	models.py
+	site.db 
+	main 
+		__init__.py 
+		routes.py 
+	posts 
+		__init__.py 
+		forms.py 
+		routes.py
+	users 
+		__init.py 
+		forms.py 
+		routes.py 
+		utils.py
+	
+	static 
+		main.css 
+		profile_pics 
+			default.jpg
+	errors
+		__init__.py 
+		handlers.py
+	templates 
+		about.html
+		account.html
+		create_post.html 
+		home.html 
+		layout.html 
+		login.html 
+		post.html 
+		register.html 
+		reset_request.html 
+		reset_token.html 
+		user_posts.html
+	
+		
