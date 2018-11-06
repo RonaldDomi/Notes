@@ -1,9 +1,14 @@
 page = request.args.get('page', 1, type=int)   #1 is the default, and error if not int 
 posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)  #date_posted descending 
 	
-{% for post in posts.items %}      #beware of posts.items!!!
-	
-{% endfor %}
+{% if  blogs.has_prev %}
+                    
+		<span class="sr-only">Previous</span>
+	</a>
+{% else %}
+
+		<span class="sr-only">Previous</span>
+{% endif %}
 
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 	{% if page_num %}
